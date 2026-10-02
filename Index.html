@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>VORTEX - Enjoy Your Ride</title>
+<script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f7fb;color:#071a33;font-family:Arial,sans-serif}
+button,input{font:inherit}
+button{border:0;cursor:pointer}
+.hide{display:none!important}
+.auth{min-height:100vh;background:linear-gradient(145deg,#071a33,#124274);display:flex;align-items:center;justify-content:center;padding:20px}
+.box{width:100%;max-width:430px;background:#fff;border-radius:27px;padding:27px 21px;box-shadow:0 25px 70px #0005}
+.logo{text-align:center;margin-bottom:24px}
+.logo h1{margin:0;font-size:34px;letter-spacing:5px}
+.logo p{margin:5px 0;color:#778596;font-size:12px}
+.field{margin:12px 0}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}
+.field input{width:100%;height:50px;border:1px solid #dbe3ec;border-radius:14px;padding:0 14px;background:#f9fbfd;outline:none}
+.field input:focus{border-color:#1768ae;background:#fff}
+.primary{width:100%;height:51px;background:#071a33;color:#fff;border-radius:14px;font-weight:800}
+.secondary{width:100%;height:50px;background:#edf2f7;color:#071a33;border-radius:14px;font-weight:800}
+.switch{text-align:center;margin-top:17px;font-size:13px;color:#788697}
+.switch b{color:#1268ad;cursor:pointer}
+.top{height:66px;background:#fff;border-bottom:1px solid #e5eaf0;display:flex;align-items:center;padding:0 16px;position:sticky;top:0;z-index:20}
+.title{font-size:19px;font-weight:900}
+.back{width:40px;height:40px;border-radius:12px;background:#edf2f7;font-size:22px;margin-right:10px}
+.page{max-width:650px;margin:auto;padding:17px 15px 95px}
+.hero{background:linear-gradient(135deg,#071a33,#124274);color:#fff;border-radius:25px;padding:21px;box-shadow:0 15px 35px #071a3320}
+.hero small{opacity:.7}
+.money{font-size:30px;font-weight:900;margin:7px 0 17px}
+.walletrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.moneybox{background:#ffffff12;border:1px solid #ffffff18;border-radius:15px;padding:12px}
+.moneybox span{display:block;font-size:10px;opacity:.7}
+.moneybox strong{display:block;margin-top:5px;font-size:15px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+.action{height:48px;background:#fff;color:#071a33;border-radius:14px;font-weight:900}
+.section{display:flex;justify-content:space-between;align-items:center;margin:23px 0 11px}
+.section h3{margin:0;font-size:17px}
+.muted{font-size:11px;color:#7b8999}
+.cards{display:grid;gap:12px}
+.category{background:#fff;border:1px solid #e4ebf2;border-radius:20px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:0 7px 22px #071a3308}
+.category.vault{background:linear-gradient(135deg,#0d355d,#071a33);color:#fff}
+.icon{width:48px;height:48px;border-radius:15px;background:#edf5fc;display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+.vault .icon{background:#ffffff14}
+.category h3{margin:0 0 4px;font-size:15px}
+.category p{margin:0;color:#7d8b9b;font-size:11px}
+.vault p{color:#b8c8d9}
+.arrow{margin-left:auto;font-size:22px;color:#8997a6}
+.bottom{position:fixed;left:0;right:0;bottom:0;height:70px;background:#fff;border-top:1px solid #e4eaf0;display:flex;justify-content:space-around;align-items:center;z-index:30}
+.nav{background:none;color:#8995a3;font-size:10px;font-weight:700}
+.nav span{display:block;font-size:20px;margin-bottom:2px}
+.nav.active{color:#071a33}
+.chat{position:fixed;right:16px;bottom:85px;width:55px;height:55px;border-radius:50%;background:#071a33;color:#fff;font-size:22px;box-shadow:0 12px 28px #071a3350;z-index:25}
+.modalbg{position:fixed;inset:0;background:#071a336b;display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.modal{width:100%;max-width:650px;max-height:90vh;overflow:auto;background:#fff;border-radius:25px 25px 0 0;padding:22px}
+.close{float:right;width:35px;height:35px;border-radius:10px;background:#edf2f7;font-size:20px}
+.notice{background:#f2f7fc;border-radius:14px;padding:13px;font-size:12px;line-height:1.55;margin:12px 0}
+.recipient{background:#071a33;color:#fff;border-radius:16px;padding:15px;margin:12px 0}
+.recipient strong{font-size:18px}
+.copy{float:right;background:#fff;color:#071a33;border-radius:8px;padding:7px 10px;font-size:10px;font-weight:bold}
+.product{background:#fff;border:1px solid #e4ebf2;border-radius:20px;padding:16px;box-shadow:0 7px 22px #071a3308}
+.prodtop{display:flex;justify-content:space-between;gap:10px}
+.prodtop h3{margin:0;font-size:16px}
+.tag{background:#edf5ff;color:#1265b0;border-radius:9px;padding:6px 8px;font-size:9px;font-weight:bold}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:13px 0}
+.stat{background:#f7f9fc;border-radius:11px;padding:9px}
+.stat span{display:block;font-size:9px;color:#8391a1}
+.stat strong{display:block;margin-top:3px;font-size:12px}
+.buy{width:100%;height:44px;background:#071a33;color:#fff;border-radius:13px;font-weight:800}
+.profile{background:#fff;border:1px solid #e4ebf2;border-radius:19px;padding:16px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #edf1f5}
+.row:last-child{border:0}
+.row span{font-size:11px;color:#778596}
+.row strong{text-align:right;font-size:12px}
+.refbox{background:linear-gradient(135deg,#071a33,#124274);color:#fff;border-radius:20px;padding:19px}
+.refcode{font-size:20px;font-weight:900;letter-spacing:2px;margin:7px 0 12px}
+.vip{display:inline-block;background:#edf5ff;color:#1265b0;padding:6px 10px;border-radius:9px;font-size:10px;font-weight:900}
+.member{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid #e4ebf2;border-radius:15px;padding:13px}
+.member small{display:block;color:#8390a0;margin-top:4px}
+.empty{text-align:center;background:#fff;border-radius:17px;padding:30px;color:#8491a0;font-size:12px}
+.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#071a33;color:#fff;padding:12px 17px;border-radius:13px;font-size:12px;z-index:100;max-width:90%;text-align:center}
+.spinner{display:inline-block;width:15px;height:15px;border:2px solid #ffffff55;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:7px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast hide"></div>
+<div id="modal" class="modalbg hide"></div>
+<script>
+const {Client,Account,TablesDB,ID,Query}=Appwrite;
+const ENDPOINT="https://cloud.appwrite.io/v1";
+const PROJECT="6a903d26002edcba7c43";
+const DB="6ab93e1f001b1a60b658";
+
+const T={
+users:"6ab972e60038e2121462",
+deposits:"6abc15840015fbc8ad75",
+withdrawals:"6abc1c3d0006a5526d37",
+products:"6abc2545003164242377",
+investments:"6abc26e2000f85014be0",
+referrals:"6abcfb0b0027beb5cb1a"
+};
+
+const TELEGRAM="https://t.me/+lcjigZvOfCI5MTU0";
+const ADMIN_LINK="https://t.me/Elyadmin1";
+
+const client=new Client().setEndpoint(ENDPOINT).setProject(PROJECT);
+const account=new Account(client);
+const db=new TablesDB(client);
+
+let me=null,current="home",products=[],recipient=null,sessionTimer=null;
+
+const DAILY=[
+["daily_start","Vortex Start",10000,1000,30000,30],
+["daily_rise","Vortex Rise",25000,2500,75000,30],
+["daily_drive","Vortex Drive",50000,5000,150000,30],
+["daily_boost","Vortex Boost",100000,10000,300000,30],
+["daily_power","Vortex Power",250000,25000,750000,30],
+["daily_pro","Vortex Pro",500000,50000,1500000,30],
+["daily_prime","Vortex Prime",1000000,100000,3000000,30],
+["daily_elite","Vortex Elite",2000000,200000,6000000,30],
+["daily_max","Vortex Max",3000000,300000,9000000,30],
+["daily_ultra","Vortex Ultra",5000000,500000,15000000,30]
+];
+
+const TIME=[
+["time_sprint","Vortex Sprint",10000,0,40000,10],
+["time_momentum","Vortex Momentum",25000,0,100000,20],
+["time_surge","Vortex Surge",50000,0,200000,20],
+["time_advance","Vortex Advance",100000,0,400000,20],
+["time_titan","Vortex Titan",250000,0,1000000,20],
+["time_apex","Vortex Apex",500000,0,2000000,20],
+["time_infinity","Vortex Infinity",1000000,0,4000000,20],
+["time_summit","Vortex Summit",2000000,0,8000000,20],
+["time_legend","Vortex Legend",3000000,0,12000000,20],
+["time_supreme","Vortex Supreme",5000000,0,20000000,20]
+];
+
+function money(n){return"UGX "+Number(n||0).toLocaleString()}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function toast(s){const e=document.getElementById("toast");e.textContent=s;e.classList.remove("hide");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>e.classList.add("hide"),2800)}
+function modal(h){document.getElementById("modal").innerHTML='<div class="modal">'+h+"</div>";document.getElementById("modal").classList.remove("hide")}
+function closeModal(){document.getElementById("modal").classList.add("hide");document.getElementById("modal").innerHTML=""}
+function nowISO(){return new Date().toISOString()}
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function sessionSave(){localStorage.setItem("vortex_session",JSON.stringify({userId:me.userId,expires:Date.now()+1200000}))}
+function sessionRead(){try{return JSON.parse(localStorage.getItem("vortex_session")||"null")}catch(e){return null}}
+function sessionClear(){localStorage.removeItem("vortex_session");clearInterval(sessionTimer);me=null}
+function sessionValid(){const s=sessionRead();return!!(s&&s.userId&&s.expires>Date.now())}
+function startSession(){clearInterval(sessionTimer);sessionTimer=setInterval(()=>{const s=sessionRead();if(!s||s.expires<=Date.now()){sessionClear();renderAuth("login");toast("Session expired. Please log in again.")}},5000)}
+async function getUserById(id){const r=await db.listRows(DB,T.users,[Query.equal("userId",id),Query.limit(1)]);return r.rows?.[0]||null}
+async function getUserByEmail(email){const r=await db.listRows(DB,T.users,[Query.equal("email",email),Query.limit(1)]);return r.rows?.[0]||null}
+async function getUserByPhone(phone){const r=await db.listRows(DB,T.users,[Query.equal("phone",phone),Query.limit(1)]);return r.rows?.[0]||null}
+async function saveUser(u){return db.updateRow(DB,T.users,u.$id,u)}
+
+function renderAuth(type){
+current=type;
+document.getElementById("app").innerHTML='<div class="auth"><div class="box"><div class="logo"><h1>VORTEX</h1><p>ENJOY YOUR RIDE</p></div>'+(type==="login"?loginForm():registerForm())+"</div></div>";
+}
+
+function loginForm(){
+return'<h2>Welcome back</h2><p class="muted">Login with your registration email and password.</p><div class="field"><label>Email</label><input id="loginEmail" type="email" placeholder="Registration email"></div><div class="field"><label>Password</label><input id="loginPassword" type="password" placeholder="Password"></div><button id="loginButton" class="primary" onclick="login()">Login</button><div class="switch">Don\'t have an account? <b onclick="renderAuth(\'register\')">Register</b></div>';
+}
+
+function registerForm(){
+const params=new URLSearchParams(location.search);
+const referral=params.get("ref")||"";
+return'<h2>Create account</h2><p class="muted">One account per phone number.</p><div class="field"><label>Username</label><input id="regUsername" maxlength="50" placeholder="Username"></div><div class="field"><label>Phone number</label><input id="regPhone" maxlength="10" inputmode="numeric" placeholder="07XXXXXXXX"></div><div class="field"><label>Email</label><input id="regEmail" maxlength="100" type="email" placeholder="Email address"></div><div class="field"><label>Password</label><input id="regPassword" type="password" placeholder="Minimum 8 characters"></div><div class="field"><label>Confirm password</label><input id="regConfirm" type="password" placeholder="Confirm password"></div><input id="regReferral" type="hidden" value="'+esc(referral)+'"><button id="registerButton" class="primary" onclick="register()">Create Account</button><div class="switch">Already registered? <b onclick="renderAuth(\'login\')">Login</b></div>';
+}
+
+async function register(){
+const b=document.getElementById("registerButton");
+const username=document.getElementById("regUsername").value.trim();
+const phone=document.getElementById("regPhone").value.trim();
+const email=document.getElementById("regEmail").value.trim().toLowerCase();
+const password=document.getElementById("regPassword").value;
+const confirm=document.getElementById("regConfirm").value;
+const referral=document.getElementById("regReferral").value.trim();
+
+if(username.length<4)return toast("Username must be at least 4 characters.");
+if(!/^07\d{8}$/.test(phone))return toast("Enter a valid 07XXXXXXXX phone.");
+if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return toast("Enter a valid email.");
+if(password.length<8)return toast("Password must be at least 8 characters.");
+if(password!==confirm)return toast("Passwords do not match.");
+
+b.disabled=true;
+b.innerHTML='<span class="spinner"></span>Registering...';
+
+try{
+const phoneUser=await getUserByPhone(phone);
+if(phoneUser)throw new Error("This phone number already has an account.");
+
+const emailUser=await getUserByEmail(email);
+if(emailUser)throw new Error("This email is already registered.");
+
+const authUser=await account.create(ID.unique(),email,password,username);
+const uid=authUser.$id;
+
+await db.createRow(DB,T.users,ID.unique(),{
+userId:uid,
+username:username,
+phone:phone,
+email:email,
+wallet:0,
+balance:0,
+viplevel:0,
+totalearned:0,
+totalwithdrawn:0,
+totaldeposited:0,
+blocked:false,
+referalcode:username
+});
+
+if(referral){
+try{
+const rr=await db.listRows(DB,T.users,[Query.equal("referalcode",referral),Query.limit(1)]);
+if(rr.rows?.[0]){
+await db.createRow(DB,T.referrals,ID.unique(),{
+referrerId:rr.rows[0].userId,
+referredId:uid,
+referrerUsername:rr.rows[0].username,
+referredUsername:username,
+active:false,
+bonus:0,
+firstPurchase:false,
+createdat:nowISO()
+});
+}
+}catch(e){}
+}
+
+await account.createEmailPasswordSession(email,password);
+me=await getUserById(uid);
+sessionSave();
+startSession();
+renderHome();
+toast("Registration successful.");
+
+}catch(e){
+try{await account.deleteSession("current")}catch(x){}
+toast(e.message||"Registration failed.");
+b.disabled=false;
+b.textContent="Create Account";
+}
+}
+
+async function login(){
+const b=document.getElementById("loginButton");
+const email=document.getElementById("loginEmail").value.trim().toLowerCase();
+const password=document.getElementById("loginPassword").value;
+
+if(!email||!password)return toast("Enter your email and password.");
+
+b.disabled=true;
+b.innerHTML='<span class="spinner"></span>Logging in...';
+
+try{
+await account.createEmailPasswordSession(email,password);
+const u=await getUserByEmail(email);
+
+if(!u)throw new Error("Account profile not found.");
+if(u.blocked===true)throw new Error("This account is blocked.");
+
+me=u;
+sessionSave();
+startSession();
+await refreshAccount();
+renderHome();
+toast("Login successful.");
+
+}catch(e){
+try{await account.deleteSession("current")}catch(x){}
+toast(e.message||"Login failed.");
+b.disabled=false;
+b.textContent="Login";
+}
+}
+  async function logout(){
+try{await account.deleteSession("current")}catch(e){}
+sessionClear();
+renderAuth("login");
+}
+
+async function refreshAccount(){
+if(!me)return;
+const u=await getUserById(me.userId);
+
+if(!u){
+sessionClear();
+renderAuth("login");
+return;
+}
+
+if(u.blocked===true){
+sessionClear();
+renderAuth("login");
+toast("Your account is blocked.");
+return;
+}
+
+me=u;
+sessionSave();
+await processDailyEarnings();
+await processMatureTime();
+const latest=await getUserById(me.userId);
+if(latest)me=latest;
+}
+
+async function checkSession(){
+if(!sessionValid()){
+renderAuth("login");
+return;
+}
+
+const s=sessionRead();
+
+try{
+await account.get();
+me=await getUserById(s.userId);
+
+if(!me||me.blocked===true){
+sessionClear();
+renderAuth("login");
+return;
+}
+
+startSession();
+await refreshAccount();
+renderHome();
+
+}catch(e){
+sessionClear();
+renderAuth("login");
+}
+}
+
+function bottomNav(){
+return'<div class="bottom"><button class="nav '+(current==="home"?"active":"")+'" onclick="renderHome()"><span>⌂</span>Home</button><button class="nav '+(current==="invite"?"active":"")+'" onclick="renderInvite()"><span>♢</span>Invite</button><button class="nav '+(current==="my"?"active":"")+'" onclick="renderMy()"><span>◉</span>My</button></div>';
+}
+
+function pageShell(title,body,back){
+return'<div class="top">'+(back?'<button class="back" onclick="renderHome()">‹</button>':"")+'<div class="title">'+esc(title)+'</div></div><div class="page">'+body+"</div>"+(back?"":bottomNav());
+}
+
+function renderHome(){
+current="home";
+document.getElementById("app").innerHTML=pageShell("VORTEX",`
+<div class="hero">
+<small>Wallet</small>
+<div class="money">${money(me.wallet)}</div>
+<div class="walletrow">
+<div class="moneybox"><span>Withdrawable Balance</span><strong>${money(me.balance)}</strong></div>
+<div class="moneybox"><span>VIP Level</span><strong>VIP ${Number(me.viplevel||0)}</strong></div>
+</div>
+<div class="actions">
+<button class="action" onclick="openDeposit()">＋ Deposit</button>
+<button class="action" onclick="openWithdraw()">↗ Withdraw</button>
+</div>
+</div>
+
+<div class="section"><h3>Vortex</h3><span class="muted">Choose a category</span></div>
+
+<div class="cards">
+
+<div class="category" onclick="loadProducts('daily')">
+<div class="icon">◈</div>
+<div><h3>Daily Earnings</h3><p>Daily earning products</p></div>
+<div class="arrow">›</div>
+</div>
+
+<div class="category" onclick="loadProducts('time')">
+<div class="icon">◷</div>
+<div><h3>Time Earnings</h3><p>Return at maturity</p></div>
+<div class="arrow">›</div>
+</div>
+
+<div class="category vault" onclick="vaultMessage()">
+<div class="icon">◇</div>
+<div><h3>Vortex Vault</h3><p>Coming Soon</p></div>
+<div class="arrow">›</div>
+</div>
+
+</div>
+
+<button class="chat" onclick="openChat()">✦</button>
+`,false);
+}
+
+function vaultMessage(){
+modal('<button class="close" onclick="closeModal()">×</button><h2>Vortex Vault</h2><div class="notice">Vortex Vault is <b>Coming Soon</b>.<br><br>New Vault features will be announced officially.</div><button class="primary" onclick="closeModal()">Close</button>');
+}
+
+async function getProducts(category){
+const base=category==="daily"?DAILY:TIME;
+
+try{
+const r=await db.listRows(DB,T.products,[
+Query.equal("category",category),
+Query.equal("status","active"),
+Query.limit(50)
+]);
+
+if(r.rows&&r.rows.length)return r.rows;
+
+}catch(e){}
+
+return base.map(x=>({
+productId:x[0],
+productname:x[1],
+amount:x[2],
+dailycredit:x[3],
+returnamount:x[4],
+duration:x[5],
+category:category,
+status:"active"
+}));
+}
+
+async function loadProducts(category){
+products=await getProducts(category);
+current=category;
+
+let html='<div class="notice">'+
+(category==="daily"
+?"Daily earning is credited immediately after purchase and then once each calendar day."
+:"Time earnings count working days. The working-day count is handled by the system and is not displayed here.")
++'</div><div class="cards">';
+
+for(const p of products)html+=productCard(p);
+
+html+="</div>";
+
+document.getElementById("app").innerHTML=pageShell(
+category==="daily"?"Daily Earnings":"Time Earnings",
+html,
+true
+);
+}
+
+function productCard(p){
+const daily=String(p.category).toLowerCase()==="daily";
+
+return`
+<div class="product">
+<div class="prodtop">
+<h3>${esc(p.productname)}</h3>
+<span class="tag">${daily?"DAILY":"TIME"}</span>
+</div>
+
+<div class="grid">
+<div class="stat"><span>Purchase</span><strong>${money(p.amount)}</strong></div>
+<div class="stat"><span>${daily?"Daily earning":"Return"}</span><strong>${money(daily?p.dailycredit:p.returnamount)}</strong></div>
+<div class="stat"><span>Total return</span><strong>${money(p.returnamount)}</strong></div>
+<div class="stat"><span>Duration</span><strong>${p.duration} days</strong></div>
+</div>
+
+<button class="buy" onclick="confirmPurchase('${esc(p.productId)}')">Purchase</button>
+</div>`;
+}
+
+function confirmPurchase(id){
+const p=products.find(x=>x.productId===id);
+if(!p)return;
+
+if(Number(me.wallet||0)<Number(p.amount)){
+toast("Insufficient Wallet balance.");
+return;
+}
+
+modal(`
+<button class="close" onclick="closeModal()">×</button>
+<h2>Confirm Purchase</h2>
+<div class="notice">
+<b>${esc(p.productname)}</b><br><br>
+Purchase: ${money(p.amount)}<br>
+Return: ${money(p.returnamount)}
+</div>
+<button id="purchaseButton" class="primary" onclick="purchase('${esc(p.productId)}')">Confirm Purchase</button>
+`);
+}
+
+async function purchase(id){
+const p=products.find(x=>x.productId===id);
+if(!p)return;
+
+const b=document.getElementById("purchaseButton");
+b.disabled=true;
+b.innerHTML='<span class="spinner"></span>Processing...';
+
+try{
+await refreshAccount();
+
+if(Number(me.wallet)<Number(p.amount))
+throw new Error("Insufficient Wallet balance.");
+
+const start=new Date();
+const end=new Date(start);
+end.setDate(end.getDate()+Number(p.duration));
+
+const daily=String(p.category).toLowerCase()==="daily";
+const first=daily?Number(p.dailycredit||0):0;
+
+const investment={
+userId:me.userId,
+username:me.username,
+productId:p.productId,
+productname:p.productname,
+category:p.category,
+amount:Number(p.amount),
+dailycredit:Number(p.dailycredit||0),
+returnamount:Number(p.returnamount),
+duration:Number(p.duration),
+startat:start.toISOString(),
+endat:end.toISOString(),
+lastcreditat:daily?start.toISOString():null,
+creditedamount:first,
+status:"running",
+createdat:start.toISOString(),
+purchaseId:ID.unique()
+};
+
+await db.createRow(DB,T.investments,ID.unique(),investment);
+
+await saveUser({
+...me,
+wallet:Number(me.wallet)-Number(p.amount),
+balance:Number(me.balance||0)+first,
+totalearned:Number(me.totalearned||0)+first
+});
+
+await referralPurchase();
+
+closeModal();
+await refreshAccount();
+renderHome();
+
+toast(daily?"Purchase successful. First earning credited.":"Purchase successful. Return will be credited at maturity.");
+
+}catch(e){
+toast(e.message||"Purchase failed.");
+b.disabled=false;
+b.textContent="Confirm Purchase";
+}
+}
+
+async function referralPurchase(){
+try{
+const r=await db.listRows(DB,T.referrals,[
+Query.equal("referredId",me.userId),
+Query.limit(1)
+]);
+
+const ref=r.rows?.[0];
+
+if(!ref||ref.firstPurchase===true)return;
+
+const inv=await db.listRows(DB,T.investments,[
+Query.equal("userId",me.userId),
+Query.orderDesc("createdat"),
+Query.limit(1)
+]);
+
+if(!inv.rows?.[0])return;
+
+const parent=await getUserById(ref.referrerId);
+if(!parent)return;
+
+const active=await db.listRows(DB,T.referrals,[
+Query.equal("referrerId",parent.userId),
+Query.equal("active",true),
+Query.limit(100)
+]);
+
+const count=active.rows?.length||0;
+
+const level=count>=50?5:count>=25?4:count>=15?3:count>=8?2:count>=2?1:0;
+const rates=[.10,.15,.19,.22,.24,.25];
+const bonus=Math.floor(Number(inv.rows[0].amount)*rates[level]);
+
+await db.updateRow(DB,T.referrals,ref.$id,{
+...ref,
+active:true,
+firstPurchase:true,
+bonus:bonus
+});
+
+await saveUser({
+...parent,
+balance:Number(parent.balance||0)+bonus,
+totalearned:Number(parent.totalearned||0)+bonus
+});
+
+await recalculateVIP(parent.userId);
+
+}catch(e){}
+}
+
+async function recalculateVIP(userId){
+try{
+const r=await db.listRows(DB,T.referrals,[
+Query.equal("referrerId",userId),
+Query.equal("active",true),
+Query.limit(100)
+]);
+
+const count=r.rows?.length||0;
+const level=count>=50?5:count>=25?4:count>=15?3:count>=8?2:count>=2?1:0;
+const u=await getUserById(userId);
+
+if(u&&Number(u.viplevel||0)!==level)
+await saveUser({...u,viplevel:level});
+
+}catch(e){}
+}
+
+function midnightCount(last,now){
+const a=new Date(last);
+const b=new Date(now);
+let count=0;
+
+let next=new Date(
+a.getFullYear(),
+a.getMonth(),
+a.getDate()+1,
+0,0,0,0
+);
+
+while(next<=b){
+count++;
+next.setDate(next.getDate()+1);
+}
+
+return count;
+}
+
+async function processDailyEarnings(){
+if(!me)return;
+
+try{
+const r=await db.listRows(DB,T.investments,[
+Query.equal("userId",me.userId),
+Query.equal("category","daily"),
+Query.equal("status","running"),
+Query.limit(100)
+]);
+
+for(const inv of(r.rows||[])){
+
+const last=new Date(inv.lastcreditat||inv.startat);
+const missed=midnightCount(last,new Date());
+const daily=Number(inv.dailycredit||0);
+const credited=Number(inv.creditedamount||0);
+const total=Number(inv.returnamount||0);
+
+if(credited>=total){
+await db.updateRow(DB,T.investments,inv.$id,{...inv,status:"completed"});
+continue;
+}
+
+const amount=Math.min(missed*daily,total-credited);
+
+if(amount<=0)continue;
+
+const u=await getUserById(me.userId);
+if(!u)continue;
+
+await saveUser({
+...u,
+balance:Number(u.balance||0)+amount,
+totalearned:Number(u.totalearned||0)+amount
+});
+
+const newCredit=credited+amount;
+let newLast=new Date(last);
+
+for(let i=0;i<missed;i++){
+if(newCredit>=total)break;
+newLast.setDate(newLast.getDate()+1);
+}
+
+await db.updateRow(DB,T.investments,inv.$id,{
+...inv,
+creditedamount:newCredit,
+lastcreditat:newLast.toISOString(),
+status:newCredit>=total?"completed":"running"
+});
+}
+
+}catch(e){}
+  }
+  function workingDay(d){
+const day=d.getDay();
+return day!==0&&day!==6;
+}
+
+function maturityDate(start,days){
+let d=new Date(start);
+let count=0;
+
+while(count<days){
+d.setDate(d.getDate()+1);
+if(workingDay(d))count++;
+}
+
+return d;
+}
+
+async function processMatureTime(){
+if(!me)return;
+
+try{
+const r=await db.listRows(DB,T.investments,[
+Query.equal("userId",me.userId),
+Query.equal("category","time"),
+Query.equal("status","running"),
+Query.limit(100)
+]);
+
+for(const inv of(r.rows||[])){
+
+const maturity=maturityDate(
+new Date(inv.startat),
+Number(inv.duration||0)
+);
+
+if(new Date()<maturity)continue;
+
+const credited=Number(inv.creditedamount||0);
+const total=Number(inv.returnamount||0);
+
+if(credited>=total)continue;
+
+const u=await getUserById(me.userId);
+if(!u)continue;
+
+const amount=total-credited;
+
+await saveUser({
+...u,
+balance:Number(u.balance||0)+amount,
+totalearned:Number(u.totalearned||0)+amount
+});
+
+await db.updateRow(DB,T.investments,inv.$id,{
+...inv,
+creditedamount:total,
+lastcreditat:new Date().toISOString(),
+status:"completed"
+});
+}
+
+}catch(e){}
+}
+
+function openDeposit(){
+
+const numbers=[
+["0730072027","Reagan Ssentongo"],
+["0758321354","Lawrence Lutaaya"],
+["0752215102","Fabious Bahati"]
+];
+
+recipient=numbers[Math.floor(Math.random()*numbers.length)];
+
+modal(`
+<button class="close" onclick="closeModal()">×</button>
+<h2>Deposit</h2>
+
+<div class="notice">
+Mobile money only.<br>
+Registered number only.<br>
+Maximum deposit: <b>${money(5000000)}</b>.<br>
+Wallet is credited after admin approval.
+</div>
+
+<div class="recipient">
+<button class="copy" onclick="copyValue('${recipient[0]}')">Copy</button>
+${esc(recipient[1])}<br>
+<strong>${recipient[0]}</strong>
+</div>
+
+<div class="field">
+<label>Registered number</label>
+<input value="${esc(me.phone)}" readonly>
+</div>
+
+<div class="field">
+<label>Amount</label>
+<input id="depositAmount" type="number" inputmode="numeric" placeholder="Amount">
+</div>
+
+<div class="field">
+<label>Transaction ID</label>
+<input id="transactionId" maxlength="100" placeholder="Transaction ID">
+</div>
+
+<button id="depositButton" class="primary" onclick="submitDeposit()">Submit Deposit</button>
+`);
+}
+
+async function submitDeposit(){
+
+const b=document.getElementById("depositButton");
+const amount=Number(document.getElementById("depositAmount").value);
+const tx=document.getElementById("transactionId").value.trim();
+
+if(amount<=0||amount>5000000)
+return toast("Maximum deposit is UGX 5,000,000.");
+
+if(!tx)
+return toast("Enter the transaction ID.");
+
+b.disabled=true;
+b.innerHTML='<span class="spinner"></span>Submitting...';
+
+try{
+
+await db.createRow(DB,T.deposits,ID.unique(),{
+userId:me.userId,
+username:me.username,
+phone:me.phone,
+amount:amount,
+recepient:recipient[0],
+transactionId:tx,
+status:"pending",
+createdat:nowISO()
+});
+
+closeModal();
+toast("Deposit submitted for approval.");
+
+}catch(e){
+toast(e.message||"Deposit failed.");
+b.disabled=false;
+b.textContent="Submit Deposit";
+}
+}
+
+const VIP=[
+{level:0,tax:20,minutes:30},
+{level:1,tax:15,minutes:20},
+{level:2,tax:10,minutes:18},
+{level:3,tax:8,minutes:10},
+{level:4,tax:7,minutes:9},
+{level:5,tax:5,minutes:2}
+];
+
+function vipInfo(){
+return VIP[Math.min(5,Math.max(0,Number(me.viplevel||0)))];
+}
+
+function openWithdraw(){
+
+const v=vipInfo();
+
+modal(`
+<button class="close" onclick="closeModal()">×</button>
+<h2>Withdraw</h2>
+
+<div class="notice">
+Open: <b>8:00 AM - 2:00 PM</b><br>
+Minimum: <b>UGX 5,000</b><br>
+Maximum: <b>UGX 5,000,000</b><br>
+One withdrawal per day<br>
+Registered number only<br><br>
+VIP ${v.level} · Tax ${v.tax}% · Processing ${v.minutes} minutes
+</div>
+
+<div class="field">
+<label>Registered number</label>
+<input value="${esc(me.phone)}" readonly>
+</div>
+
+<div class="field">
+<label>Amount</label>
+<input id="withdrawAmount" type="number" inputmode="numeric" placeholder="Amount">
+</div>
+
+<button id="withdrawButton" class="primary" onclick="submitWithdraw()">Request Withdrawal</button>
+`);
+}
+
+async function submitWithdraw(){
+
+const b=document.getElementById("withdrawButton");
+const amount=Number(document.getElementById("withdrawAmount").value);
+const now=new Date();
+const hour=now.getHours();
+const v=vipInfo();
+
+if(hour<8||hour>=14)
+return toast("Withdrawals are closed. Open 8:00 AM - 2:00 PM.");
+
+if(amount<5000||amount>5000000)
+return toast("Withdrawal must be UGX 5,000 - UGX 5,000,000.");
+
+if(amount>Number(me.balance||0))
+return toast("Insufficient withdrawable Balance.");
+
+b.disabled=true;
+b.innerHTML='<span class="spinner"></span>Submitting...';
+
+try{
+
+const existing=await db.listRows(DB,T.withdrawals,[
+Query.equal("userId",me.userId),
+Query.equal("withdrawdate",today()),
+Query.limit(2)
+]);
+
+if(existing.rows?.length)
+throw new Error("Only one withdrawal is allowed per day.");
+
+await db.createRow(DB,T.withdrawals,ID.unique(),{
+userId:me.userId,
+username:me.username,
+phone:me.phone,
+paymentphone:me.phone,
+amount:amount,
+level:v.level,
+tax:v.tax,
+processingminutes:v.minutes,
+status:"pending",
+withdrawdate:today(),
+createdat:nowISO()
+});
+
+closeModal();
+toast("Withdrawal submitted. Balance remains until approval.");
+
+}catch(e){
+toast(e.message||"Withdrawal failed.");
+b.disabled=false;
+b.textContent="Request Withdrawal";
+}
+}
+
+function copyValue(value){
+if(navigator.clipboard){
+navigator.clipboard.writeText(value).then(()=>toast("Copied."));
+}else{
+const x=document.createElement("textarea");
+x.value=value;
+document.body.appendChild(x);
+x.select();
+document.execCommand("copy");
+x.remove();
+toast("Copied.");
+}
+}
+
+function openChat(){
+modal(`
+<button class="close" onclick="closeModal()">×</button>
+<h2>Vortex Chat</h2>
+
+<div class="cards">
+
+<div class="category" onclick="window.open('${TELEGRAM}','_blank')">
+<div class="icon">✈</div>
+<div><h3>Telegram Group</h3><p>Join Vortex community</p></div>
+<div class="arrow">›</div>
+</div>
+
+<div class="category" onclick="window.open('${ADMIN_LINK}','_blank')">
+<div class="icon">♙</div>
+<div><h3>Chat With Admin</h3><p>Contact Vortex Admin</p></div>
+<div class="arrow">›</div>
+</div>
+
+<div class="category" onclick="showAnnouncements()">
+<div class="icon">◉</div>
+<div><h3>Vortex Announcements</h3><p>Official updates</p></div>
+<div class="arrow">›</div>
+</div>
+
+</div>
+`);
+}
+
+function showAnnouncements(){
+modal(`
+<button class="close" onclick="closeModal()">×</button>
+<h2>Vortex Announcements</h2>
+<div class="notice">No new announcements at the moment.</div>
+`);
+}
+  async function renderInvite(){
+
+current="invite";
+await refreshAccount();
+
+let members=[];
+let active=[];
+let bonuses=0;
+
+try{
+
+const r=await db.listRows(DB,T.referrals,[
+Query.equal("referrerId",me.userId),
+Query.limit(100)
+]);
+
+members=r.rows||[];
+active=members.filter(x=>x.active===true);
+bonuses=members.reduce((a,x)=>a+Number(x.bonus||0),0);
+
+await recalculateVIP(me.userId);
+
+const latest=await getUserById(me.userId);
+if(latest)me=latest;
+
+}catch(e){}
+
+const level=Number(me.viplevel||0);
+
+const next=
+level===0?2:
+level===1?8:
+level===2?15:
+level===3?25:
+level===4?50:null;
+
+let list="";
+
+if(members.length){
+
+for(const m of members){
+
+list+=`
+<div class="member">
+<div>
+<b>${esc(m.referredUsername||"Member")}</b>
+<small>${m.active===true?"Active":"Inactive"}</small>
+</div>
+<span class="vip">${m.active===true?"ACTIVE":"INACTIVE"}</span>
+</div>
+`;
+
+}
+
+}else{
+list='<div class="empty">No referral members yet.</div>';
+}
+
+const referralCode=me.referalcode||me.username;
+const referralLink=location.origin+location.pathname+"?ref="+encodeURIComponent(referralCode);
+
+document.getElementById("app").innerHTML=pageShell(
+"Invite",
+`
+<div class="refbox">
+<small>Your Referral Link</small>
+<div style="font-size:12px;line-height:1.5;word-break:break-all;margin:10px 0 14px">${esc(referralLink)}</div>
+<button class="action" onclick="copyValue('${esc(referralLink)}')">Copy Link</button>
+</div>
+
+<div class="section">
+<h3>VIP Level</h3>
+<span class="vip">VIP ${level}</span>
+</div>
+
+<div class="profile">
+
+<div class="row">
+<span>Active referrals</span>
+<strong>${active.length}</strong>
+</div>
+
+<div class="row">
+<span>Inactive members</span>
+<strong>${members.length-active.length}</strong>
+</div>
+
+<div class="row">
+<span>Referral bonuses</span>
+<strong>${money(bonuses)}</strong>
+</div>
+
+<div class="row">
+<span>Next VIP level</span>
+<strong>${next===null?"MAX":next+" active referrals"}</strong>
+</div>
+
+</div>
+
+<div class="section"><h3>Referral Members</h3></div>
+
+<div class="cards">${list}</div>
+`,
+false
+);
+}
+
+async function renderMy(){
+
+current="my";
+await refreshAccount();
+
+let investments=[];
+
+try{
+
+const r=await db.listRows(DB,T.investments,[
+Query.equal("userId",me.userId),
+Query.orderDesc("createdat"),
+Query.limit(100)
+]);
+
+investments=r.rows||[];
+
+}catch(e){}
+
+const running=investments.filter(x=>x.status==="running").length;
+const completed=investments.filter(x=>x.status==="completed").length;
+const total=investments.reduce((a,x)=>a+Number(x.amount||0),0);
+
+let list="";
+
+if(investments.length){
+
+for(const x of investments){
+
+list+=`
+<div class="product">
+
+<div class="prodtop">
+<h3>${esc(x.productname)}</h3>
+<span class="tag">${esc(x.status)}</span>
+</div>
+
+<div class="grid">
+
+<div class="stat">
+<span>Purchased</span>
+<strong>${money(x.amount)}</strong>
+</div>
+
+<div class="stat">
+<span>Return</span>
+<strong>${money(x.returnamount)}</strong>
+</div>
+
+<div class="stat">
+<span>Credited</span>
+<strong>${money(x.creditedamount)}</strong>
+</div>
+
+<div class="stat">
+<span>Duration</span>
+<strong>${x.duration} days</strong>
+</div>
+
+</div>
+
+</div>
+`;
+
+}
+
+}else{
+list='<div class="empty">No activated products yet.</div>';
+}
+
+document.getElementById("app").innerHTML=pageShell(
+"My",
+`
+<div class="profile">
+
+<div class="row">
+<span>Username</span>
+<strong>${esc(me.username)}</strong>
+</div>
+
+<div class="row">
+<span>Email</span>
+<strong>${esc(me.email)}</strong>
+</div>
+
+<div class="row">
+<span>Phone</span>
+<strong>${esc(me.phone)}</strong>
+</div>
+
+<div class="row">
+<span>Wallet</span>
+<strong>${money(me.wallet)}</strong>
+</div>
+
+<div class="row">
+<span>Balance</span>
+<strong>${money(me.balance)}</strong>
+</div>
+
+<div class="row">
+<span>VIP Level</span>
+<strong>VIP ${Number(me.viplevel||0)}</strong>
+</div>
+
+</div>
+
+<div class="section"><h3>Activated Products</h3></div>
+
+<div class="profile">
+
+<div class="row">
+<span>Active products</span>
+<strong>${running}</strong>
+</div>
+
+<div class="row">
+<span>Completed products</span>
+<strong>${completed}</strong>
+</div>
+
+<div class="row">
+<span>Total purchased</span>
+<strong>${money(total)}</strong>
+</div>
+
+</div>
+
+<div class="section"><h3>My Products</h3></div>
+
+<div class="cards">${list}</div>
+
+<button class="secondary" style="margin-top:18px" onclick="logout()">Logout</button>
+`,
+false
+);
+}
+
+setInterval(async()=>{
+if(!me||!sessionValid())return;
+
+try{
+
+const u=await getUserById(me.userId);
+
+if(!u||u.blocked===true){
+await logout();
+return;
+}
+
+me=u;
+
+await processDailyEarnings();
+await processMatureTime();
+
+}catch(e){}
+
+},60000);
+
+checkSession();
+  </script>
+</body>
+</html>
