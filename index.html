@@ -347,30 +347,25 @@ async function getUserRow(id){
   $("registerBtn").textContent="Create Account";
  }
 }
-
 async function login(){
  clearMessage();
 
  const email=$("loginEmail").value.trim();
  const password=$("loginPassword").value;
 
- if(!email||!password)return message("Enter your email and password.");
-
- $("loginBtn").disabled=true;
- $("loginBtn").textContent="Logging in...";
+ if(!email)return message("Enter your email");
+ if(!password)return message("Enter your password");
 
  try{
   await account.createEmailPasswordSession(email,password);
-  await loadUser();
+  currentUser=await account.get();
+  userRow=await getUserRow(currentUser.$id);
   openApp();
  }catch(e){
-  console.error(e);
-  message(e.message||"Login failed.");
- }finally{
-  $("loginBtn").disabled=false;
-  $("loginBtn").textContent="Login";
+  console.log("LOGIN ERROR:",e);
+  message(e.message||"Login failed");
  }
-}
+   }
 
 async function loadUser(){
  try{
