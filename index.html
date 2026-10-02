@@ -236,7 +236,7 @@ createdat:nowISO(),
 activatedat:""
 });
 }
-}catch(e){console.error("Referral creation failed:",e);}
+}catch(e){toast("Referral error: "+(e.message||e));}
 }
 await account.createEmailPasswordSession(email,password);
 me=await getUserById(uid);
