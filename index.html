@@ -239,7 +239,6 @@ try{
 if(await getUserByPhone(phone))return message("registerMsg","This phone number is already registered.");
 
 const created=await account.create(ID.unique(),email,password,username);
-
 await db.createRow({
 databaseId:DATABASE_ID,
 tableId:TABLES.users,
@@ -255,6 +254,7 @@ createdAt:new Date().toISOString(),
 status:"active"
 }
 });
+
 
 await account.createEmailPasswordSession(email,password);
 currentUser=await account.get();
