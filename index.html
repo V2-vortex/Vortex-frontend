@@ -219,20 +219,25 @@ if(referral){
 try{
 const rr=await db.listRows(DB,T.users,[Query.equal("referalcode",referral),Query.limit(1)]);
 if(rr.rows?.[0]){
+const r=rr.rows[0];
 await db.createRow(DB,T.referrals,ID.unique(),{
-referrerId:rr.rows[0].userId,
-referredId:uid,
-referrerUsername:rr.rows[0].username,
-referredUsername:username,
-active:false,
-bonus:0,
-firstPurchase:false,
-createdat:nowISO()
+referrerId:r.userId,
+referrerusername:r.username,
+referreduserId:uid,
+referredusername:username,
+referralcode:referral,
+status:"pending",
+firstpurchase:false,
+firstpurchaseamount:0,
+bonusPercent:0,
+bonusamount:0,
+bonuspaid:false,
+createdat:nowISO(),
+activatedat:""
 });
 }
-}catch(e){}
+}catch(e){console.error("Referral creation failed:",e);}
 }
-
 await account.createEmailPasswordSession(email,password);
 me=await getUserById(uid);
 sessionSave();
