@@ -603,7 +603,7 @@ await recalculateVIP(parent.userId);
 
 }catch(e){}
 }
-
+  
 async function recalculateVIP(userId){
 try{
 const r=await db.listRows(DB,T.referrals,[
