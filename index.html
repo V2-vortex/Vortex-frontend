@@ -2,2662 +2,1229 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Vortex</title>
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
-body{background:#f5f7fa;color:#071a33;min-height:100vh}
-button,input{font:inherit}button{cursor:pointer}
-.screen{display:none;min-height:100vh}.screen.active{display:block}
-.auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:#071a33}
-.authbox{width:100%;max-width:430px;background:#fff;border-radius:20px;padding:28px 22px}
-.brand{text-align:center;margin-bottom:22px}.brand h1{font-size:30px;letter-spacing:2px}
-.brand p{margin-top:6px;color:#64748b;font-size:12px;letter-spacing:2px}
-.input{width:100%;padding:14px;margin-bottom:12px;border:1px solid #d7dee8;border-radius:11px;outline:0}
-.mainbtn{width:100%;padding:14px;border:0;border-radius:11px;background:#071a33;color:#fff;font-weight:bold}
-.secondarybtn{width:100%;padding:13px;border:1px solid #d7dee8;border-radius:11px;background:#fff;color:#071a33;font-weight:bold;margin-top:10px}
-.switch{text-align:center;margin-top:16px;color:#64748b;font-size:13px}.switch span{color:#071a33;font-weight:bold}
-.msg{min-height:18px;font-size:13px;margin-bottom:8px}.msg.err{color:#c62828}.msg.ok{color:#16803c}
-.topbar{background:#071a33;color:#fff;padding:18px;position:sticky;top:0;z-index:20}
-.topbarrow{display:flex;justify-content:space-between;align-items:center}.topbar h2{font-size:20px}
-.container{max-width:650px;margin:auto;padding:18px 15px 90px}
-.balancecard{background:#071a33;color:#fff;border-radius:18px;padding:22px;margin-bottom:16px}
-.balance{font-size:30px;font-weight:bold;margin:8px 0 17px}.balancegrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.balanceitem{background:#ffffff14;padding:11px;border-radius:10px}.balanceitem small{display:block;opacity:.7}
-.actiongrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.action{border:0;padding:16px;border-radius:14px;background:#fff;color:#071a33;font-weight:bold}
-.action:disabled{opacity:.45;cursor:not-allowed}.sectiontitle{font-size:18px;margin:21px 0 11px}
-.product{background:#fff;border-radius:16px;padding:17px;margin-bottom:11px;box-shadow:0 4px 16px #071a3310}
-.producthead{display:flex;justify-content:space-between;gap:8px}.price{font-weight:bold}
-.product p{color:#64748b;font-size:12px;margin-top:6px}.productinfo{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}
-.infobox{background:#f5f7fa;border-radius:9px;padding:9px;font-size:11px}.infobox strong{display:block;margin-top:3px}
-.bottomnav{position:fixed;bottom:0;left:0;right:0;height:65px;background:#fff;border-top:1px solid #e4e8ee;z-index:30}
-.navinner{max-width:650px;height:100%;margin:auto;display:grid;grid-template-columns:repeat(3,1fr)}
-.navbtn{border:0;background:#fff;color:#7a8798;font-size:12px}.navbtn.active{color:#071a33;font-weight:bold}
-.modalbg{display:none;position:fixed;inset:0;background:#0008;z-index:100;align-items:flex-end;justify-content:center}
-.modalbg.show{display:flex}.modal{width:100%;max-width:650px;max-height:90vh;overflow:auto;background:#fff;border-radius:20px 20px 0 0;padding:20px 17px 25px}
-.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.closebtn{border:0;background:#eef1f5;width:34px;height:34px;border-radius:50%}
-.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf0f4}.row span{color:#64748b}
-.notice{color:#64748b;font-size:13px;line-height:1.5;margin:10px 0 16px}.hidden{display:none!important}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f5f7fa;color:#071a33;min-height:100vh}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.screen{display:none;min-height:100vh}
+.screen.active{display:block}
+.container{width:100%;max-width:500px;margin:auto;padding:20px}
+.card{background:#fff;border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 5px 20px rgba(7,26,51,.08)}
+.logo{font-size:30px;font-weight:800;letter-spacing:2px}
+.tagline{margin-top:5px;font-size:12px;letter-spacing:2px;color:#667085}
+.title{font-size:24px;font-weight:700;margin-bottom:8px}
+.subtitle{font-size:14px;color:#667085;line-height:1.5}
+label{display:block;font-size:13px;font-weight:600;margin:14px 0 7px}
+input,select{width:100%;padding:14px;border:1px solid #d9dee7;border-radius:11px;outline:none;background:#fff;color:#071a33}
+input:focus,select:focus{border-color:#071a33}
+.mainbtn{width:100%;border:0;border-radius:12px;padding:14px;margin-top:18px;background:#071a33;color:#fff;font-weight:700}
+.secondarybtn{width:100%;border:1px solid #071a33;border-radius:12px;padding:13px;margin-top:10px;background:#fff;color:#071a33;font-weight:700}
+.msg{margin-top:12px;font-size:13px;line-height:1.4}
+.msg.err{color:#c62828}
+.msg.ok{color:#188038}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.smallbtn{border:0;background:#eef2f7;color:#071a33;border-radius:10px;padding:9px 12px;font-size:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 </style>
 </head>
+
 <body>
-<div id="app">
-<div id="loginScreen" class="screen active"><div class="auth"><div class="authbox">
-<div class="brand"><h1>VORTEX</h1><p>ENJOY YOUR RIDE.</p></div>
-<div id="loginMsg" class="msg"></div>
-<input id="loginEmail" class="input" type="email" placeholder="Email">
-<input id="loginPassword" class="input" type="password" placeholder="Password">
+
+<section id="loginScreen" class="screen active">
+<div class="container">
+<div style="padding-top:50px;padding-bottom:25px">
+<div class="logo">VORTEX</div>
+<div class="tagline">ENJOY YOUR RIDE</div>
+</div>
+
+<div class="card">
+<div class="title">Welcome back</div>
+<div class="subtitle">Login to your Vortex account.</div>
+
+<label>Email</label>
+<input id="loginEmail" type="email" autocomplete="email" placeholder="Enter your email">
+
+<label>Password</label>
+<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter your password">
+
 <button class="mainbtn" onclick="login()">Login</button>
-<div class="switch">Don't have an account? <span onclick="showRegister()">Register</span></div>
-</div></div></div>
-<div id="registerScreen" class="screen"><div class="auth"><div class="authbox">
-<div class="brand"><h1>VORTEX</h1><p>CREATE ACCOUNT</p></div>
-<div id="regMsg" class="msg"></div>
-<input id="regUsername" class="input" placeholder="Username">
-<input id="regPhone" class="input" placeholder="Phone 07XXXXXXXX" inputmode="numeric">
-<input id="regEmail" class="input" type="email" placeholder="Email">
-<input id="regPassword" class="input" type="password" placeholder="Password">
-<input id="regConfirm" class="input" type="password" placeholder="Confirm password">
+<div id="loginMsg" class="msg"></div>
+
+<button class="secondarybtn" onclick="showScreen('registerScreen')">Create Account</button>
+</div>
+</div>
+</section>
+
+
+<section id="registerScreen" class="screen">
+<div class="container">
+<div style="padding-top:35px;padding-bottom:20px">
+<div class="logo">VORTEX</div>
+<div class="tagline">ENJOY YOUR RIDE</div>
+</div>
+
+<div class="card">
+<div class="title">Create account</div>
+<div class="subtitle">Create your Vortex account.</div>
+
+<label>Username</label>
+<input id="regUsername" type="text" placeholder="Choose username">
+
+<label>Phone</label>
+<input id="regPhone" type="tel" placeholder="07XXXXXXXX">
+
+<label>Email</label>
+<input id="regEmail" type="email" placeholder="Enter email">
+
+<label>Password</label>
+<input id="regPassword" type="password" placeholder="At least 8 characters">
+
+<label>Confirm Password</label>
+<input id="regConfirm" type="password" placeholder="Confirm password">
+
 <button class="mainbtn" onclick="register()">Create Account</button>
-<div class="switch">Already registered? <span onclick="showLogin()">Login</span></div>
-</div></div></div>
-<div id="homeScreen" class="screen">
-<div class="topbar"><div class="topbarrow"><div><h2>VORTEX</h2><small>ENJOY YOUR RIDE.</small></div><div id="welcomeName"></div></div></div>
-<div class="container"><div class="balancecard"><small>Withdrawable Balance</small><div id="homeBalance" class="balance">UGX 0</div>
-<div class="balancegrid"><div class="balanceitem"><small>Wallet</small><strong id="homeWallet">UGX 0</strong></div><div class="balanceitem"><small>VIP</small><strong id="homeVip">VIP 0</strong></div></div></div>
-<div class="actiongrid"><button class="action" onclick="openDeposit()">Deposit</button><button id="withdrawAction" class="action" onclick="openWithdraw()">Withdraw</button></div>
-<div id="withdrawStatus" class="notice"></div><h3 class="sectiontitle">Daily Earnings</h3><div id="dailyProducts"></div>
-<h3 class="sectiontitle">Time Earnings</h3><div id="timeProducts"></div></div>
-<div class="bottomnav"><div class="navinner"><button id="navHome" class="navbtn active" onclick="showHome()">Home</button><button id="navInvite" class="navbtn" onclick="showInvite()">Invite</button><button id="navProfile" class="navbtn" onclick="showProfile()">My</button></div></div>
-</div></div>
-<div id="modalBg" class="modalbg"><div id="modal" class="modal"></div></div>
+<div id="regMsg" class="msg"></div>
+
+<button class="secondarybtn" onclick="showScreen('loginScreen')">Back to Login</button>
+</div>
+</div>
+</section>
+
+
+<section id="homeScreen" class="screen">
+<div class="container">
+<div class="topbar">
+<div>
+<div class="logo" style="font-size:22px">VORTEX</div>
+<div class="tagline">ENJOY YOUR RIDE</div>
+</div>
+<button class="smallbtn" onclick="logout()">Logout</button>
+</div>
+
+<div class="card">
+<div class="subtitle">Welcome back</div>
+<div id="homeUsername" style="font-size:22px;font-weight:700;margin-top:5px">Vortex User</div>
+</div>
+
+<div class="card">
+<div class="subtitle">Wallet</div>
+<div id="walletAmount" style="font-size:30px;font-weight:800;margin-top:5px">UGX 0</div>
+<div class="subtitle" style="margin-top:10px">Available for purchases</div>
+</div>
+
+<div class="card">
+<div class="subtitle">Balance</div>
+<div id="balanceAmount" style="font-size:30px;font-weight:800;margin-top:5px">UGX 0</div>
+<div class="subtitle" style="margin-top:10px">Available balance</div>
+</div>
+
+<div class="grid2">
+<button class="mainbtn" onclick="openDeposit()">Deposit</button>
+<button class="mainbtn" onclick="openWithdraw()">Withdraw</button>
+</div>
+
+<div class="grid2" style="margin-top:10px">
+<button class="secondarybtn" onclick="openProducts()">Products</button>
+<button class="secondarybtn" onclick="openInvestments()">Investments</button>
+<button class="secondarybtn" onclick="openInvite()">Invite</button>
+<button class="secondarybtn" onclick="openProfile()">Profile</button>
+</div>
+</div>
+</section>
+
 <script>
 const{Client,Account,TablesDB,ID,Query}=Appwrite;
-const ENDPOINT="https://fra.cloud.appwrite.io/v1",PROJECT_ID="6a903d26002edcba7c43",DATABASE_ID="6ab93e1f001b1a60b658";
-const T={users:"6ab972e60038e2121462",deposits:"6abc15840015fbc8ad75",withdrawals:"6abc1c3d0006a5526d37",products:"6abc2545003164242377",investments:"6abc26e2000f85014be0",referrals:"6abcfb0b0027beb5cb1a"};
-const client=new Client().setEndpoint(ENDPOINT).setProject(PROJECT_ID),account=new Account(client),db=new TablesDB(client);
-let user=null,currentProfile=null,currentRecipient={name:"Reagan Ssentongo",number:"0730072027"},productCache=[],investmentLock=false,processing=false;
-const RECIPIENTS=[["Reagan Ssentongo","0730072027"],["Lawrence Lutaaya","0758321354"],["Fabious Bahati","0752215102"]];
-const $=id=>document.getElementById(id);
-const money=v=>"UGX "+Number(v||0).toLocaleString();
-function msg(id,t,c){const e=$(id);if(e){e.textContent=t;e.className="msg "+(c||"")}}
-function showScreen(id){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));$(id).classList.add("active")}
-function openModal(h){$("modal").innerHTML=h;$("modalBg").classList.add("show")}
-function closeModal(){$("modalBg").classList.remove("show");$("modal").innerHTML=""}
-$("modalBg").onclick=e=>{if(e.target===$("modalBg"))closeModal()};
-function setNav(id){["navHome","navInvite","navProfile"].forEach(x=>$(x).classList.remove("active"));$(id)?.classList.add("active")};
-  async function getUserById(userId){
-  try{
-    const r = await db.listRows(
-      DATABASE_ID,
-      T.users,
-      [
-        Query.equal("userId",userId),
-        Query.limit(1)
-      ]
-    );
 
-    return r.rows && r.rows.length
-      ? r.rows[0]
-      : null;
+const ENDPOINT="https://fra.cloud.appwrite.io/v1";
+const PROJECT_ID="6a903d26002edcba7c43";
+const DATABASE_ID="6ab93e1f001b1a60b658";
 
-  }catch(e){
-    return null;
-  }
+const T={
+users:"6ab972e60038e2121462",
+deposits:"6abc15840015fbc8ad75",
+withdrawals:"6abc1c3d0006a5526d37",
+products:"6abc2545003164242377",
+investments:"6abc26e2000f85014be0",
+referrals:"6abcfb0b0027beb5cb1a"
+};
+
+const client=new Client()
+.setEndpoint(ENDPOINT)
+.setProject(PROJECT_ID);
+
+const account=new Account(client);
+const db=new TablesDB(client);
+
+let user=null;
+let currentProfile=null;
+
+function $(id){return document.getElementById(id)}
+
+function showScreen(id){
+document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+const el=$(id);
+if(el)el.classList.add("active");
 }
 
-async function saveUser(data){
-  if(!data || !data.$id){
-    throw new Error("User record not found.");
-  }
+function msg(id,text,type=""){
+const el=$(id);
+if(!el)return;
+el.textContent=text;
+el.className="msg "+type;
+}
 
-  return await db.updateRow(
-    DATABASE_ID,
-    T.users,
-    data.$id,
-    {
-      userId: data.userId,
-      username: data.username,
-      phone: data.phone,
-      email: data.email,
-      wallet: Number(data.wallet || 0),
-      balance: Number(data.balance || 0),
-      viplevel: Number(data.viplevel || 0),
-      totalearned: Number(data.totalearned || 0),
-      totalwithdrawn: Number(data.totalwithdrawn || 0),
-      totaldeposited: Number(data.totaldeposited || 0),
-      blocked: data.blocked === true
-    }
-  );
+async function getUserById(userId){
+const result=await db.listRows(
+DATABASE_ID,
+T.users,
+[Query.equal("userId",userId),Query.limit(1)]
+);
+return result.rows&&result.rows.length?result.rows[0]:null;
+}
+  <section id="depositScreen" class="screen">
+<div class="container">
+<div class="topbar">
+<div class="title">Deposit</div>
+<button class="smallbtn" onclick="showHome()">Home</button>
+</div>
+
+<div class="card">
+<div class="subtitle">Submit your deposit transaction for review.</div>
+
+<label>Recipient</label>
+<select id="depositRecipient">
+<option value="0730072027">Reagan Ssentongo — 0730072027</option>
+<option value="0758321354">Lawrence Lutaaya — 0758321354</option>
+<option value="0752215102">Fabious Bahati — 0752215102</option>
+</select>
+
+<label>Amount</label>
+<input id="depositAmount" type="number" min="1" placeholder="Enter amount">
+
+<label>Your Phone</label>
+<input id="depositPhone" type="tel" placeholder="07XXXXXXXX">
+
+<label>Transaction ID</label>
+<input id="depositTransaction" type="text" placeholder="Enter transaction ID">
+
+<button class="mainbtn" onclick="submitDeposit()">Submit Deposit</button>
+<div id="depositMsg" class="msg"></div>
+</div>
+</div>
+</section>
+
+
+<section id="withdrawScreen" class="screen">
+<div class="container">
+<div class="topbar">
+<div class="title">Withdraw</div>
+<button class="smallbtn" onclick="showHome()">Home</button>
+</div>
+
+<div class="card">
+<div class="subtitle">Submit a withdrawal request from your available balance.</div>
+
+<label>Registered Phone</label>
+<input id="withdrawPhone" type="tel" placeholder="07XXXXXXXX">
+
+<label>Amount</label>
+<input id="withdrawAmount" type="number" min="5000" placeholder="Enter amount">
+
+<button class="mainbtn" onclick="submitWithdrawal()">Submit Withdrawal</button>
+<div id="withdrawMsg" class="msg"></div>
+</div>
+</div>
+</section>
+
+
+<section id="productsScreen" class="screen">
+<div class="container">
+<div class="topbar">
+<div class="title">Products</div>
+<button class="smallbtn" onclick="showHome()">Home</button>
+</div>
+<div id="productsList"></div>
+</div>
+</section>
+
+
+<section id="investmentsScreen" class="screen">
+<div class="container">
+<div class="topbar">
+<div class="title">My Investments</div>
+<button class="smallbtn" onclick="showHome()">Home</button>
+</div>
+<div id="investmentsList"></div>
+</div>
+</section>
+
+
+<section id="inviteScreen" class="screen">
+<div class="container">
+<div class="topbar">
+<div class="title">Invite</div>
+<button class="smallbtn" onclick="showHome()">Home</button>
+</div>
+
+<div class="card">
+<div class="title" style="font-size:19px">Referral</div>
+<div class="subtitle">Your referral code</div>
+<div id="referralCode" style="font-size:22px;font-weight:800;margin-top:8px">—</div>
+<button class="mainbtn" onclick="copyReferral()">Copy Code</button>
+</div>
+
+<div id="referralStats"></div>
+</div>
+</section>
+
+
+<section id="profileScreen" class="screen">
+<div class="container">
+<div class="topbar">
+<div class="title">Profile</div>
+<button class="smallbtn" onclick="showHome()">Home</button>
+</div>
+
+<div class="card">
+<div class="subtitle">Username</div>
+<div id="profileUsername" style="font-size:19px;font-weight:700;margin-top:5px">—</div>
+
+<div class="subtitle" style="margin-top:16px">Phone</div>
+<div id="profilePhone" style="font-weight:700;margin-top:5px">—</div>
+
+<div class="subtitle" style="margin-top:16px">Email</div>
+<div id="profileEmail" style="font-weight:700;margin-top:5px">—</div>
+
+<div class="subtitle" style="margin-top:16px">VIP Level</div>
+<div id="profileVip" style="font-weight:700;margin-top:5px">0</div>
+</div>
+</div>
+</section>
+  <div id="popup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);align-items:center;justify-content:center;padding:20px;z-index:9999">
+<div class="card" style="width:100%;max-width:380px;text-align:center">
+<div id="popupText" style="font-size:16px;line-height:1.5"></div>
+<button class="mainbtn" onclick="closePopup()">OK</button>
+</div>
+</div>
+
+<script>
+function alertBox(text){
+$("popupText").textContent=text;
+$("popup").style.display="flex";
+}
+
+function closePopup(){
+$("popup").style.display="none";
+}
+
+function escapeHTML(value){
+return String(value??"")
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
+}
+
+function money(value){
+return"UGX "+Number(value||0).toLocaleString();
 }
 
 async function refreshProfile(){
-  if(!user) return false;
+if(!user)return false;
 
-  const profile = await getUserById(user.$id);
+const profile=await getUserById(user.$id);
 
-  if(!profile){
-    return false;
-  }
+if(!profile){
+currentProfile=null;
+return false;
+}
 
-  currentProfile = profile;
-
-  if(profile.blocked === true){
-    await logout();
-    return false;
-  }
-
-  updateHomeNumbers();
-
-  return true;
+currentProfile=profile;
+return true;
 }
 
 function updateHomeNumbers(){
-  if(!currentProfile) return;
 
-  $("homeBalance").textContent =
-    money(currentProfile.balance);
+if(!currentProfile)return;
 
-  $("homeWallet").textContent =
-    money(currentProfile.wallet);
+$("homeUsername").textContent=
+currentProfile.username||user.name||"Vortex User";
 
-  $("homeVip").textContent =
-    "VIP " + Number(currentProfile.viplevel || 0);
+$("walletAmount").textContent=
+money(currentProfile.wallet);
 
-  $("welcomeName").textContent =
-    currentProfile.username || "";
+$("balanceAmount").textContent=
+money(currentProfile.balance);
+
 }
 
-function showLogin(){
-  msg("loginMsg","");
-  showScreen("loginScreen");
+function openProfile(){
+
+if(!currentProfile)return showLogin();
+
+$("profileUsername").textContent=
+currentProfile.username||"—";
+
+$("profilePhone").textContent=
+currentProfile.phone||"—";
+
+$("profileEmail").textContent=
+currentProfile.email||user.email||"—";
+
+$("profileVip").textContent=
+currentProfile.viplevel??0;
+
+showScreen("profileScreen");
 }
 
-function showRegister(){
-  msg("regMsg","");
-  showScreen("registerScreen");
+async function showHome(){
+
+if(!currentProfile){
+
+const ok=await refreshProfile();
+
+if(!ok){
+showLogin();
+return;
 }
 
-async function register(){
+}
 
-  const username =
-    $("regUsername").value.trim();
-
-  const phone =
-    $("regPhone").value.trim();
-
-  const email =
-    $("regEmail").value.trim();
-
-  const password =
-    $("regPassword").value;
-
-  const confirm =
-    $("regConfirm").value;
-
-  if(username.length < 4){
-    return msg(
-      "regMsg",
-      "Username must be at least 4 characters.",
-      "err"
-    );
-  }
-
-  if(!/^07\d{8}$/.test(phone)){
-    return msg(
-      "regMsg",
-      "Phone must be in the format 07XXXXXXXX.",
-      "err"
-    );
-  }
-
-  if(!email){
-    return msg(
-      "regMsg",
-      "Email is required.",
-      "err"
-    );
-  }
-
-  if(password.length < 8){
-    return msg(
-      "regMsg",
-      "Password must be at least 8 characters.",
-      "err"
-    );
-  }
-
-  if(password !== confirm){
-    return msg(
-      "regMsg",
-      "Passwords do not match.",
-      "err"
-    );
-  }
-
-  try{
-
-    const existing = await db.listRows(
-      DATABASE_ID,
-      T.users,
-      [
-        Query.equal("phone",phone),
-        Query.limit(1)
-      ]
-    );
-
-    if(existing.rows && existing.rows.length){
-      return msg(
-        "regMsg",
-        "That phone number is already registered.",
-        "err"
-      );
+updateHomeNumbers();
+showScreen("homeScreen");
     }
+  async function register(){
 
-    const newAccount = await account.create(
-      ID.unique(),
-      email,
-      password,
-      username
-    );
+const username=$("regUsername").value.trim();
+const phone=$("regPhone").value.trim();
+const email=$("regEmail").value.trim();
+const password=$("regPassword").value;
+const confirm=$("regConfirm").value;
 
-    await db.createRow(
-      DATABASE_ID,
-      T.users,
-      ID.unique(),
-      {
-        userId: newAccount.$id,
-        username: username,
-        phone: phone,
-        email: email,
-        wallet: 0,
-        balance: 0,
-        viplevel: 0,
-        totalearned: 0,
-        totalwithdrawn: 0,
-        totaldeposited: 0,
-        blocked: false
-      }
-    );
+msg("regMsg","","");
 
-    await account.createEmailPasswordSession(
-      email,
-      password
-    );
+if(username.length<4)
+return msg("regMsg","Username must be at least 4 characters.","err");
 
-    user = await account.get();
+if(!/^07\d{8}$/.test(phone))
+return msg("regMsg","Phone must be in the format 07XXXXXXXX.","err");
 
-    await refreshProfile();
+if(!email)
+return msg("regMsg","Email is required.","err");
 
-    showHome();
+if(password.length<8)
+return msg("regMsg","Password must be at least 8 characters.","err");
 
-  }catch(e){
+if(password!==confirm)
+return msg("regMsg","Passwords do not match.","err");
 
-    msg(
-      "regMsg",
-      e.message || "Registration failed.",
-      "err"
-    );
-  }
+try{
+
+const existing=await db.listRows(
+DATABASE_ID,
+T.users,
+[Query.equal("phone",phone),Query.limit(1)]
+);
+
+if(existing.rows&&existing.rows.length)
+return msg("regMsg","That phone number is already registered.","err");
+
+const newAccount=await account.create(
+ID.unique(),
+email,
+password,
+username
+);
+
+await db.createRow(
+DATABASE_ID,
+T.users,
+ID.unique(),
+{
+userId:newAccount.$id,
+username,
+phone,
+email,
+wallet:0,
+balance:0,
+viplevel:0,
+totalearned:0,
+totalwithdrawn:0,
+totaldeposited:0,
+blocked:false
 }
+);
+
+await account.createEmailPasswordSession(email,password);
+
+user=await account.get();
+
+const ok=await refreshProfile();
+
+if(!ok){
+throw new Error("Account profile could not be loaded.");
+}
+
+await showHome();
+
+}catch(e){
+
+msg("regMsg",e.message||"Registration failed.","err");
+
+}
+
+}
+
 
 async function login(){
- const email=$("loginEmail").value.trim();
- const password=$("loginPassword").value;
 
- if(!email||!password)
-  return msg("loginMsg","Enter email and password.","err");
+const email=$("loginEmail").value.trim();
+const password=$("loginPassword").value;
 
- try{
-  await account.createEmailPasswordSession(email,password);
-  await new Promise(r=>setTimeout(r,300));
-  user=await account.get();
-  await refreshProfile();
+msg("loginMsg","","");
 
-  if(currentProfile.blocked){
-   await account.deleteSession("current");
-   user=null;
-   return msg("loginMsg","This account is blocked.","err");
-  }
+if(!email||!password)
+return msg("loginMsg","Enter your email and password.","err");
 
-  showHome();
- }catch(e){
-  console.error(e);
-  msg("loginMsg",e.message||"Login failed.","err");
- }
+try{
+
+await account.createEmailPasswordSession(
+email,
+password
+);
+
+user=await account.get();
+
+const ok=await refreshProfile();
+
+if(!ok){
+
+await account.deleteSession("current");
+
+return msg(
+"loginMsg",
+"Your account profile was not found.",
+"err"
+);
+
 }
+
+if(currentProfile.blocked===true){
+
+await account.deleteSession("current");
+
+user=null;
+currentProfile=null;
+
+return msg(
+"loginMsg",
+"Your account has been blocked.",
+"err"
+);
+
+}
+
+await showHome();
+
+}catch(e){
+
+msg(
+"loginMsg",
+e.message||"Login failed.",
+"err"
+);
+
+}
+
+}
+
 
 async function logout(){
 
-  try{
-    await account.deleteSession("current");
-  }catch(e){}
+try{
+await account.deleteSession("current");
+}catch(e){}
 
-  user = null;
-  currentProfile = null;
-  productCache = [];
+user=null;
+currentProfile=null;
 
-  showLogin();
-}
+showLogin();
 
-async function sessionValid(){
-
-  try{
-    await account.get();
-    return true;
-  }catch(e){
-    return false;
-  }
-}
-  async function showHome(){
-
-  if(!user){
-    return showLogin();
-  }
-
-  setNav("navHome");
-
-  showScreen("homeScreen");
-
-  await refreshProfile();
-
-  updateHomeNumbers();
-
-  await loadProducts();
-
-  await loadMyInvestmentsSummary();
-}
-
-async function loadMyInvestmentsSummary(){
-
-  if(!user) return;
-
-  try{
-
-    const r = await db.listRows(
-      DATABASE_ID,
-      T.investments,
-      [
-        Query.equal("userId",user.$id),
-        Query.orderDesc("createdat"),
-        Query.limit(100)
-      ]
-    );
-
-    const rows = r.rows || [];
-
-    const running =
-      rows.filter(x => x.status === "running").length;
-
-    const completed =
-      rows.filter(x => x.status === "completed").length;
-
-    const title = $("welcomeName");
-
-    if(title){
-      title.title =
-        running + " running / " +
-        completed + " completed";
     }
+  async function openDeposit(){
 
-  }catch(e){}
+if(!currentProfile)return showLogin();
+
+$("depositPhone").value=
+currentProfile.phone||"";
+
+$("depositAmount").value="";
+$("depositTransaction").value="";
+
+msg("depositMsg","","");
+
+showScreen("depositScreen");
+
 }
 
-function showLoadingProducts(){
-
-  $("dailyProducts").innerHTML =
-    "<div class='product'><p>Loading products...</p></div>";
-
-  $("timeProducts").innerHTML =
-    "<div class='product'><p>Loading products...</p></div>";
-}
-
-function productCard(p){
-
-  const isDaily =
-    p.category === "daily";
-
-  let details = "";
-
-  if(isDaily){
-
-    details = `
-      <div class="infobox">
-        Daily profit
-        <strong>${money(p.dailycredit)}</strong>
-      </div>
-
-      <div class="infobox">
-        Total profit
-        <strong>${money(p.returnamount)}</strong>
-      </div>
-    `;
-
-  }else{
-
-    details = `
-      <div class="infobox">
-        Maturity
-        <strong>${p.duration} days</strong>
-      </div>
-
-      <div class="infobox">
-        Maturity profit
-        <strong>${money(p.returnamount)}</strong>
-      </div>
-    `;
-  }
-
-  return `
-    <div class="product">
-
-      <div class="producthead">
-        <div>
-          <h3>${p.name}</h3>
-          <p>
-            ${isDaily
-              ? "Daily earnings"
-              : "Time earnings"}
-          </p>
-        </div>
-
-        <div class="price">
-          ${money(p.amount)}
-        </div>
-      </div>
-
-      <div class="productinfo">
-        ${details}
-      </div>
-
-      <button
-        class="mainbtn"
-        onclick="purchaseProduct('${p.$id}')">
-        Purchase
-      </button>
-
-    </div>
-  `;
-}
-
-function renderProducts(){
-
-  const daily =
-    productCache.filter(
-      x => x.category === "daily"
-    );
-
-  const time =
-    productCache.filter(
-      x => x.category === "time"
-    );
-
-  if(!daily.length){
-    $("dailyProducts").innerHTML =
-      "<div class='product'><p>No daily products available.</p></div>";
-  }else{
-    $("dailyProducts").innerHTML =
-      daily.map(productCard).join("");
-  }
-
-  if(!time.length){
-    $("timeProducts").innerHTML =
-      "<div class='product'><p>No time products available.</p></div>";
-  }else{
-    $("timeProducts").innerHTML =
-      time.map(productCard).join("");
-  }
-}
-
-function showPageMessage(title,text){
-
-  openModal(`
-    <div class="successbox">
-
-      <div class="successicon">✓</div>
-
-      <h3>${title}</h3>
-
-      <p class="notice">${text}</p>
-
-      <button
-        class="mainbtn"
-        onclick="closeModal()">
-        Done
-      </button>
-
-    </div>
-  `);
-  }
-  const FALLBACK_DAILY = [
-
-  ["daily_start","Vortex Start",10000],
-  ["daily_rise","Vortex Rise",25000],
-  ["daily_drive","Vortex Drive",50000],
-  ["daily_boost","Vortex Boost",100000],
-  ["daily_power","Vortex Power",250000],
-  ["daily_pro","Vortex Pro",500000],
-  ["daily_prime","Vortex Prime",1000000],
-  ["daily_elite","Vortex Elite",2000000],
-  ["daily_max","Vortex Max",3000000],
-  ["daily_ultra","Vortex Ultra",5000000]
-
-];
-
-const FALLBACK_TIME = [
-
-  ["time_sprint","Vortex Sprint",10000],
-  ["time_momentum","Vortex Momentum",25000],
-  ["time_surge","Vortex Surge",50000],
-  ["time_advance","Vortex Advance",100000],
-  ["time_titan","Vortex Titan",250000],
-  ["time_apex","Vortex Apex",500000],
-  ["time_infinity","Vortex Infinity",1000000],
-  ["time_summit","Vortex Summit",2000000],
-  ["time_legend","Vortex Legend",3000000],
-  ["time_supreme","Vortex Supreme",5000000]
-
-];
-
-function normalizeProduct(p){
-
-  const amount =
-    Number(p.amount || 0);
-
-  const category =
-    p.category === "time"
-      ? "time"
-      : "daily";
-
-  const duration = 20;
-
-  if(category === "daily"){
-
-    const dailycredit =
-      Math.floor(amount * 0.10);
-
-    const returnamount =
-      dailycredit * duration;
-
-    return {
-      ...p,
-      category,
-      duration,
-      dailycredit,
-      returnamount
-    };
-  }
-
-  const returnamount =
-    Math.floor(amount * 2.20);
-
-  return {
-    ...p,
-    category,
-    duration,
-    dailycredit: 0,
-    returnamount
-  };
-}
-
-function fallbackProducts(){
-
-  const daily =
-    FALLBACK_DAILY.map(x => ({
-      $id: x[0],
-      name: x[1],
-      amount: x[2],
-      category: "daily",
-      active: true
-    }));
-
-  const time =
-    FALLBACK_TIME.map(x => ({
-      $id: x[0],
-      name: x[1],
-      amount: x[2],
-      category: "time",
-      active: true
-    }));
-
-  return [
-    ...daily,
-    ...time
-  ].map(normalizeProduct);
-}
-
-async function loadProducts(){
-
-  showLoadingProducts();
-
-  try{
-
-    const r = await db.listRows(
-      DATABASE_ID,
-      T.products,
-      [
-        Query.equal("active",true),
-        Query.orderAsc("sortorder"),
-        Query.limit(100)
-      ]
-    );
-
-    const rows = r.rows || [];
-
-    if(!rows.length){
-      productCache = fallbackProducts();
-    }else{
-      productCache =
-        rows.map(normalizeProduct);
-    }
-
-  }catch(e){
-
-    productCache =
-      fallbackProducts();
-  }
-
-  renderProducts();
-}
-
-function findProduct(productId){
-
-  return productCache.find(
-    x => String(x.$id) === String(productId)
-  );
-}
-
-function purchaseConfirmation(p){
-
-  openModal(`
-    <div class="modalhead">
-      <h3>Confirm Purchase</h3>
-      <button class="closebtn"
-              onclick="closeModal()">×</button>
-    </div>
-
-    <div class="row">
-      <span>Product</span>
-      <strong>${p.name}</strong>
-    </div>
-
-    <div class="row">
-      <span>Purchase amount</span>
-      <strong>${money(p.amount)}</strong>
-    </div>
-
-    <div class="row">
-      <span>Duration</span>
-      <strong>${p.duration} days</strong>
-    </div>
-
-    <div class="row">
-      <span>Wallet after purchase</span>
-      <strong>
-        ${money(
-          Number(currentProfile.wallet || 0)
-          - Number(p.amount || 0)
-        )}
-      </strong>
-    </div>
-
-    <div class="row">
-      <span>Profit</span>
-      <strong>
-        ${money(p.returnamount)}
-      </strong>
-    </div>
-
-    <button
-      class="mainbtn"
-      onclick="confirmPurchase('${p.$id}')">
-      Confirm Purchase
-    </button>
-
-    <button
-      class="secondarybtn"
-      onclick="closeModal()">
-      Cancel
-    </button>
-  `);
-  }
-  async function purchaseProduct(productId){
-
-  if(!user || !currentProfile){
-    return showLogin();
-  }
-
-  const p = findProduct(productId);
-
-  if(!p){
-    return showPageMessage(
-      "Product unavailable",
-      "This product could not be found."
-    );
-  }
-
-  const wallet =
-    Number(currentProfile.wallet || 0);
-
-  const amount =
-    Number(p.amount || 0);
-
-  if(wallet < amount){
-
-    return showPageMessage(
-      "Insufficient Wallet",
-      "Your wallet does not have enough funds for this purchase."
-    );
-  }
-
-  purchaseConfirmation(p);
-}
-
-async function confirmPurchase(productId){
-
-  if(investmentLock){
-    return;
-  }
-
-  investmentLock = true;
-
-  try{
-
-    if(!user){
-      throw new Error("Please login again.");
-    }
-
-    const p = findProduct(productId);
-
-    if(!p){
-      throw new Error("Product not found.");
-    }
-
-    const freshProfile =
-      await getUserById(user.$id);
-
-    if(!freshProfile){
-      throw new Error("Account record not found.");
-    }
-
-    if(freshProfile.blocked === true){
-      throw new Error("This account is blocked.");
-    }
-
-    const wallet =
-      Number(freshProfile.wallet || 0);
-
-    const amount =
-      Number(p.amount || 0);
-
-    if(wallet < amount){
-      throw new Error("Insufficient wallet balance.");
-    }
-
-    /*
-      Keep the same-product restriction only if
-      your current system uses one running purchase
-      per product.
-    */
-
-    const existing =
-      await db.listRows(
-        DATABASE_ID,
-        T.investments,
-        [
-          Query.equal("userId",user.$id),
-          Query.equal("status","running"),
-          Query.limit(100)
-        ]
-      );
-
-    const duplicate =
-      (existing.rows || []).some(
-        x =>
-          String(x.productId || "") ===
-          String(p.$id)
-      );
-
-    if(duplicate){
-
-      throw new Error(
-        "You already have this product running."
-      );
-    }
-
-    const now =
-      new Date();
-
-    const createdat =
-      now.toISOString();
-
-    const end =
-      new Date(
-        now.getTime() +
-        Number(p.duration) *
-        24 * 60 * 60 * 1000
-      );
-
-    const newWallet =
-      wallet - amount;
-
-    await db.updateRow(
-      DATABASE_ID,
-      T.users,
-      freshProfile.$id,
-      {
-        userId: freshProfile.userId,
-        username: freshProfile.username,
-        phone: freshProfile.phone,
-        email: freshProfile.email,
-        wallet: newWallet,
-        balance: Number(freshProfile.balance || 0),
-        viplevel: Number(freshProfile.viplevel || 0),
-        totalearned: Number(freshProfile.totalearned || 0),
-        totalwithdrawn: Number(freshProfile.totalwithdrawn || 0),
-        totaldeposited: Number(freshProfile.totaldeposited || 0),
-        blocked: freshProfile.blocked === true
-      }
-    );
-
-    await db.createRow(
-      DATABASE_ID,
-      T.investments,
-      ID.unique(),
-      {
-        userId: user.$id,
-        username: freshProfile.username || "",
-        productId: p.$id,
-        productName: p.name,
-        category: p.category,
-        amount: amount,
-        dailycredit: Number(p.dailycredit || 0),
-        returnamount: Number(p.returnamount || 0),
-        duration: Number(p.duration || 20),
-        status: "running",
-        createdat: createdat,
-        lastcredit: createdat,
-        endat: end.toISOString(),
-        credited: 0
-      }
-    );
-
-    user = await account.get();
-
-    await refreshProfile();
-
-    closeModal();
-
-    /*
-      First purchase referral commission is handled
-      immediately after investment creation.
-    */
-    await handleReferralFirstPurchase(amount);
-
-    /*
-      Recalculate VIP after purchase because this
-      investment makes the referred account active.
-    */
-    await recalculateVIP(user.$id);
-
-    await refreshProfile();
-
-    showPageMessage(
-      "Purchase Successful",
-      p.name +
-      " has been added to your running investments."
-    );
-
-  }catch(e){
-
-    closeModal();
-
-    showPageMessage(
-      "Purchase Failed",
-      e.message || "The purchase could not be completed."
-    );
-
-  }finally{
-
-    investmentLock = false;
-  }
-  }
-  async function creditUserBalance(
-  userId,
-  amount
-){
-
-  amount =
-    Number(amount || 0);
-
-  if(amount <= 0){
-    return null;
-  }
-
-  const profile =
-    await getUserById(userId);
-
-  if(!profile){
-    throw new Error("User not found.");
-  }
-
-  const oldBalance =
-    Number(profile.balance || 0);
-
-  const oldEarned =
-    Number(profile.totalearned || 0);
-
-  return await db.updateRow(
-    DATABASE_ID,
-    T.users,
-    profile.$id,
-    {
-      userId: profile.userId,
-      username: profile.username,
-      phone: profile.phone,
-      email: profile.email,
-      wallet: Number(profile.wallet || 0),
-      balance: oldBalance + amount,
-      viplevel: Number(profile.viplevel || 0),
-      totalearned: oldEarned + amount,
-      totalwithdrawn: Number(profile.totalwithdrawn || 0),
-      totaldeposited: Number(profile.totaldeposited || 0),
-      blocked: profile.blocked === true
-    }
-  );
-}
-
-async function updateInvestment(
-  investment,
-  data
-){
-
-  return await db.updateRow(
-    DATABASE_ID,
-    T.investments,
-    investment.$id,
-    data
-  );
-}
-
-async function processDailyEarnings(){
-
-  if(!user) return;
-
-  try{
-
-    const r =
-      await db.listRows(
-        DATABASE_ID,
-        T.investments,
-        [
-          Query.equal("userId",user.$id),
-          Query.equal("status","running"),
-          Query.equal("category","daily"),
-          Query.limit(100)
-        ]
-      );
-
-    const investments =
-      r.rows || [];
-
-    const now =
-      Date.now();
-
-    for(const inv of investments){
-
-      const created =
-        new Date(inv.createdat).getTime();
-
-      const end =
-        new Date(inv.endat).getTime();
-
-      const last =
-        new Date(
-          inv.lastcredit || inv.createdat
-        ).getTime();
-
-      const elapsedDays =
-        Math.floor(
-          (now - last) /
-          (24 * 60 * 60 * 1000)
-        );
-
-      const totalDuration =
-        Number(inv.duration || 20);
-
-      const maxProfit =
-        Number(inv.amount || 0) * 2;
-
-      let credited =
-        Number(inv.credited || 0);
-
-      /*
-        If the investment has reached maturity,
-        credit the exact remaining profit and complete it.
-      */
-      if(now >= end){
-
-        const remaining =
-          Math.max(
-            0,
-            maxProfit - credited
-          );
-
-        if(remaining > 0){
-
-          await creditUserBalance(
-            user.$id,
-            remaining
-          );
-
-          credited += remaining;
-        }
-
-        await updateInvestment(
-          inv,
-          {
-            userId: inv.userId,
-            username: inv.username,
-            productId: inv.productId,
-            productName: inv.productName,
-            category: inv.category,
-            amount: Number(inv.amount || 0),
-            dailycredit: Number(inv.dailycredit || 0),
-            returnamount: Number(inv.returnamount || 0),
-            duration: totalDuration,
-            status: "completed",
-            createdat: inv.createdat,
-            lastcredit: new Date(end).toISOString(),
-            endat: inv.endat,
-            credited: credited,
-            completedat: new Date().toISOString()
-          }
-        );
-
-        continue;
-      }
-
-      if(elapsedDays <= 0){
-        continue;
-      }
-
-      const daily =
-        Number(inv.dailycredit || 0);
-
-      let possible =
-        elapsedDays * daily;
-
-      const remaining =
-        Math.max(
-          0,
-          maxProfit - credited
-        );
-
-      possible =
-        Math.min(
-          possible,
-          remaining
-        );
-
-      if(possible <= 0){
-        continue;
-      }
-
-      await creditUserBalance(
-        user.$id,
-        possible
-      );
-
-      credited += possible;
-
-      const nextCredit =
-        new Date(
-          last +
-          elapsedDays *
-          24 * 60 * 60 * 1000
-        );
-
-      await updateInvestment(
-        inv,
-        {
-          userId: inv.userId,
-          username: inv.username,
-          productId: inv.productId,
-          productName: inv.productName,
-          category: inv.category,
-          amount: Number(inv.amount || 0),
-          dailycredit: daily,
-          returnamount: Number(inv.returnamount || 0),
-          duration: totalDuration,
-          status: "running",
-          createdat: inv.createdat,
-          lastcredit: nextCredit.toISOString(),
-          endat: inv.endat,
-          credited: credited
-        }
-      );
-    }
-
-  }catch(e){}
-}
-
-async function processTimeInvestments(){
-
-  if(!user) return;
-
-  try{
-
-    const r =
-      await db.listRows(
-        DATABASE_ID,
-        T.investments,
-        [
-          Query.equal("userId",user.$id),
-          Query.equal("status","running"),
-          Query.equal("category","time"),
-          Query.limit(100)
-        ]
-      );
-
-    const investments =
-      r.rows || [];
-
-    const now =
-      Date.now();
-
-    for(const inv of investments){
-
-      const end =
-        new Date(inv.endat).getTime();
-
-      if(now < end){
-        continue;
-      }
-
-      const already =
-        Number(inv.credited || 0);
-
-      const maturityProfit =
-        Number(inv.returnamount || 0);
-
-      const remaining =
-        Math.max(
-          0,
-          maturityProfit - already
-        );
-
-      if(remaining > 0){
-
-        await creditUserBalance(
-          user.$id,
-          remaining
-        );
-      }
-
-      await updateInvestment(
-        inv,
-        {
-          userId: inv.userId,
-          username: inv.username,
-          productId: inv.productId,
-          productName: inv.productName,
-          category: inv.category,
-          amount: Number(inv.amount || 0),
-          dailycredit: 0,
-          returnamount: maturityProfit,
-          duration: Number(inv.duration || 20),
-          status: "completed",
-          createdat: inv.createdat,
-          lastcredit: inv.lastcredit || inv.createdat,
-          endat: inv.endat,
-          credited: maturityProfit,
-          completedat: new Date().toISOString()
-        }
-      );
-    }
-
-  }catch(e){}
-}
-
-async function processAllEarnings(){
-
-  if(processing) return;
-
-  processing = true;
-
-  try{
-
-    await processDailyEarnings();
-
-    await processTimeInvestments();
-
-    await refreshProfile();
-
-  }catch(e){
-
-  }finally{
-
-    processing = false;
-  }
-  }
-  function referralUserId(ref){
-
-  return String(
-    ref.referreduserId ||
-    ref.referredUserId ||
-    ref.referredId ||
-    ""
-  );
-}
-
-async function hasRunningInvestment(userId){
-
-  if(!userId){
-    return false;
-  }
-
-  try{
-
-    const r =
-      await db.listRows(
-        DATABASE_ID,
-        T.investments,
-        [
-          Query.equal("userId",userId),
-          Query.equal("status","running"),
-          Query.limit(1)
-        ]
-      );
-
-    return Boolean(
-      r.rows &&
-      r.rows.length
-    );
-
-  }catch(e){
-
-    return false;
-  }
-}
-
-async function getReferralActivity(referrerId){
-
-  try{
-
-    const r =
-      await db.listRows(
-        DATABASE_ID,
-        T.referrals,
-        [
-          Query.equal(
-            "referrerId",
-            referrerId
-          ),
-          Query.limit(100)
-        ]
-      );
-
-    const members =
-      r.rows || [];
-
-    const active = [];
-
-    for(const ref of members){
-
-      const referredId =
-        referralUserId(ref);
-
-      if(!referredId){
-        continue;
-      }
-
-      const running =
-        await hasRunningInvestment(
-          referredId
-        );
-
-      if(running){
-
-        active.push({
-          ...ref,
-          _active: true
-        });
-
-      }
-    }
-
-    return {
-      members,
-      active
-    };
-
-  }catch(e){
-
-    return {
-      members: [],
-      active: []
-    };
-  }
-}
-
-async function syncSingleReferral(ref){
-
-  const referredId =
-    referralUserId(ref);
-
-  if(!referredId){
-    return false;
-  }
-
-  const active =
-    await hasRunningInvestment(
-      referredId
-    );
-
-  /*
-    The schema contains status.
-    We use status instead of inventing
-    an "active" field.
-  */
-
-  try{
-
-    const data = {
-      referrerId: ref.referrerId,
-      referrerusername:
-        ref.referrerusername || "",
-      referreduserId:
-        referredId,
-      referredusername:
-        ref.referredusername ||
-        ref.referredUsername ||
-        "",
-      referralcode:
-        ref.referralcode || "",
-      status:
-        active ? "active" : "inactive",
-      firstpurchase:
-        ref.firstpurchase === true,
-      firstpurchaseamount:
-        Number(ref.firstpurchaseamount || 0),
-      bonusPercent:
-        Number(ref.bonusPercent || 0),
-      bonusamount:
-        Number(ref.bonusamount || 0),
-      bonuspaid:
-        ref.bonuspaid === true,
-      createdat:
-        ref.createdat ||
-        ref.$createdAt ||
-        new Date().toISOString()
-    };
-
-    if(active){
-      data.activatedat =
-        ref.activatedat ||
-        new Date().toISOString();
-    }
-
-    await db.updateRow(
-      DATABASE_ID,
-      T.referrals,
-      ref.$id,
-      data
-    );
-
-    return active;
-
-  }catch(e){
-
-    return active;
-  }
-}
-
-async function recalculateVIP(userId){
-
-  if(!userId){
-    return 0;
-  }
-
-  try{
-
-    const activity =
-      await getReferralActivity(
-        userId
-      );
-
-    const count =
-      activity.active.length;
-
-    const level =
-      count >= 50 ? 5 :
-      count >= 25 ? 4 :
-      count >= 15 ? 3 :
-      count >= 8 ? 2 :
-      count >= 2 ? 1 :
-      0;
-
-    const profile =
-      await getUserById(userId);
-
-    if(
-      profile &&
-      Number(profile.viplevel || 0) !== level
-    ){
-
-      await db.updateRow(
-        DATABASE_ID,
-        T.users,
-        profile.$id,
-        {
-          userId: profile.userId,
-          username: profile.username,
-          phone: profile.phone,
-          email: profile.email,
-          wallet: Number(profile.wallet || 0),
-          balance: Number(profile.balance || 0),
-          viplevel: level,
-          totalearned:
-            Number(profile.totalearned || 0),
-          totalwithdrawn:
-            Number(profile.totalwithdrawn || 0),
-          totaldeposited:
-            Number(profile.totaldeposited || 0),
-          blocked:
-            profile.blocked === true
-        }
-      );
-    }
-
-    return level;
-
-  }catch(e){
-
-    return 0;
-  }
-}
-
-async function refreshReferralStatus(){
-
-  if(!user) return;
-
-  try{
-
-    const r =
-      await db.listRows(
-        DATABASE_ID,
-        T.referrals,
-        [
-          Query.equal(
-            "referrerId",
-            user.$id
-          ),
-          Query.limit(100)
-        ]
-      );
-
-    for(const ref of (r.rows || [])){
-      await syncSingleReferral(ref);
-    }
-
-    await recalculateVIP(user.$id);
-
-    await refreshProfile();
-
-  }catch(e){}
-  }
-  const VIP_RULES = {
-  0: {
-    min: 0,
-    max: 1,
-    commission: 10,
-    fee: 20,
-    processing: 30
-  },
-
-  1: {
-    min: 2,
-    max: 7,
-    commission: 12,
-    fee: 15,
-    processing: 20
-  },
-
-  2: {
-    min: 8,
-    max: 14,
-    commission: 15,
-    fee: 10,
-    processing: 18
-  },
-
-  3: {
-    min: 15,
-    max: 24,
-    commission: 20,
-    fee: 8,
-    processing: 10
-  },
-
-  4: {
-    min: 25,
-    max: 49,
-    commission: 25,
-    fee: 7,
-    processing: 9
-  },
-
-  5: {
-    min: 50,
-    max: Infinity,
-    commission: 30,
-    fee: 5,
-    processing: 2
-  }
-};
-
-function getVipRule(level){
-
-  return VIP_RULES[
-    Number(level || 0)
-  ] || VIP_RULES[0];
-}
-
-async function handleReferralFirstPurchase(
-  purchaseAmount
-){
-
-  if(!user){
-    return;
-  }
-
-  try{
-
-    const r =
-      await db.listRows(
-        DATABASE_ID,
-        T.referrals,
-        [
-          Query.equal(
-            "referreduserId",
-            user.$id
-          ),
-          Query.limit(10)
-        ]
-      );
-
-    const refs =
-      r.rows || [];
-
-    if(!refs.length){
-      return;
-    }
-
-    const ref =
-      refs[0];
-
-    /*
-      Commission is paid only once,
-      according to bonuspaid.
-    */
-
-    if(ref.bonuspaid === true){
-      return;
-    }
-
-    const referrerId =
-      String(ref.referrerId || "");
-
-    if(!referrerId){
-      return;
-    }
-
-    const referrer =
-      await getUserById(referrerId);
-
-    if(!referrer){
-      return;
-    }
-
-    const vipLevel =
-      await recalculateVIP(
-        referrerId
-      );
-
-    const rule =
-      getVipRule(vipLevel);
-
-    const percent =
-      Number(rule.commission);
-
-    const bonus =
-      Math.floor(
-        Number(purchaseAmount || 0) *
-        percent / 100
-      );
-
-    if(bonus > 0){
-
-      await creditUserBalance(
-        referrerId,
-        bonus
-      );
-    }
-
-    const update = {
-      referrerId: ref.referrerId,
-      referrerusername:
-        ref.referrerusername || "",
-      referreduserId:
-        ref.referreduserId ||
-        ref.referredUserId,
-      referredusername:
-        ref.referredusername ||
-        ref.referredUsername ||
-        "",
-      referralcode:
-        ref.referralcode || "",
-      status: "active",
-      firstpurchase: true,
-      firstpurchaseamount:
-        Number(purchaseAmount || 0),
-      bonusPercent: percent,
-      bonusamount: bonus,
-      bonuspaid: true,
-      createdat:
-        ref.createdat ||
-        ref.$createdAt ||
-        new Date().toISOString(),
-      activatedat:
-        new Date().toISOString()
-    };
-
-    await db.updateRow(
-      DATABASE_ID,
-      T.referrals,
-      ref.$id,
-      update
-    );
-
-    await recalculateVIP(
-      referrerId
-    );
-
-  }catch(e){}
-}
-
-async function getReferralStats(){
-
-  if(!user){
-    return {
-      total: 0,
-      active: 0
-    };
-  }
-
-  const activity =
-    await getReferralActivity(
-      user.$id
-    );
-
-  return {
-    total: activity.members.length,
-    active: activity.active.length
-  };
-}
-
-async function showInvite(){
-
-  if(!user){
-    return showLogin();
-  }
-
-  setNav("navInvite");
-
-  const stats =
-    await getReferralStats();
-
-  const level =
-    Number(currentProfile.viplevel || 0);
-
-  const rule =
-    getVipRule(level);
-
-  /*
-    The referral code shown here uses username.
-    This keeps it compatible with systems where
-    the username is the referral identity.
-  */
-
-  const referralCode =
-    currentProfile.username || "";
-
-  const referralLink =
-    location.origin +
-    location.pathname +
-    "?ref=" +
-    encodeURIComponent(referralCode);
-
-  openModal(`
-
-    <div class="modalhead">
-      <h3>Invite & Earn</h3>
-
-      <button class="closebtn"
-              onclick="closeModal()">×</button>
-    </div>
-
-    <div class="vipbox">
-
-      <div class="whiteSmall">
-        Current Level
-      </div>
-
-      <h2>VIP ${level}</h2>
-
-      <div class="whiteSmall">
-        Active referrals:
-        ${stats.active}
-      </div>
-
-    </div>
-
-    <div class="row">
-      <span>Total referrals</span>
-      <strong>${stats.total}</strong>
-    </div>
-
-    <div class="row">
-      <span>Active referrals</span>
-      <strong>${stats.active}</strong>
-    </div>
-
-    <div class="row">
-      <span>Commission rate</span>
-      <strong>${rule.commission}%</strong>
-    </div>
-
-    <h3 class="sectiontitle">
-      Your referral code
-    </h3>
-
-    <div class="copybox">
-      <input
-        id="refCode"
-        class="input"
-        value="${referralCode}"
-        readonly>
-
-      <button
-        class="copybtn"
-        onclick="copyText('refCode')">
-        Copy
-      </button>
-    </div>
-
-    <h3 class="sectiontitle">
-      Referral link
-    </h3>
-
-    <div class="copybox">
-      <input
-        id="refLink"
-        class="input"
-        value="${referralLink}"
-        readonly>
-
-      <button
-        class="copybtn"
-        onclick="copyText('refLink')">
-        Copy
-      </button>
-    </div>
-
-    <p class="notice">
-      A referral becomes active when the referred
-      account has at least one running investment.
-    </p>
-
-  `);
-}
-
-async function copyText(id){
-
-  const value =
-    $(id).value;
-
-  try{
-
-    await navigator.clipboard.writeText(
-      value
-    );
-
-    showPageMessage(
-      "Copied",
-      "The referral information has been copied."
-    );
-
-  }catch(e){
-
-    $(id).select();
-
-    document.execCommand("copy");
-
-    showPageMessage(
-      "Copied",
-      "The referral information has been copied."
-    );
-  }
-  }
-  function openDeposit(){
-
-  currentRecipient =
-    RECIPIENTS[0];
-
-  openModal(`
-
-    <div class="modalhead">
-      <h3>Deposit</h3>
-
-      <button class="closebtn"
-              onclick="closeModal()">×</button>
-    </div>
-
-    <p class="notice">
-      Send your deposit to one of the Vortex
-      mobile-money recipients below, then submit
-      your transaction details.
-    </p>
-
-    ${RECIPIENTS.map((r,i)=>`
-
-      <div class="product">
-
-        <strong>${r.name}</strong>
-
-        <p>${r.number}</p>
-
-        <button
-          class="secondarybtn"
-          onclick="selectRecipient(${i})">
-          Use This Number
-        </button>
-
-      </div>
-
-    `).join("")}
-
-    <div id="depositSelected"
-         class="small">
-      Selected:
-      ${currentRecipient.name}
-      —
-      ${currentRecipient.number}
-    </div>
-
-    <br>
-
-    <div id="depMsg" class="msg"></div>
-
-    <input
-      id="depAmount"
-      class="input"
-      type="number"
-      placeholder="Amount">
-
-    <input
-      id="depPhone"
-      class="input"
-      placeholder="Your registered payment phone"
-      inputmode="numeric">
-
-    <input
-      id="depTx"
-      class="input"
-      placeholder="Transaction ID">
-
-    <button
-      class="mainbtn"
-      onclick="submitDeposit()">
-      Submit Deposit
-    </button>
-
-  `);
-}
-
-function selectRecipient(index){
-
-  currentRecipient =
-    RECIPIENTS[index];
-
-  const selected =
-    $("depositSelected");
-
-  if(selected){
-    selected.textContent =
-      "Selected: " +
-      currentRecipient.name +
-      " — " +
-      currentRecipient.number;
-  }
-}
 
 async function submitDeposit(){
 
-  const amount =
-    Number($("depAmount").value);
+const amount=Number($("depositAmount").value);
+const recipient=$("depositRecipient").value;
+const phone=$("depositPhone").value.trim();
+const transaction=$("depositTransaction").value.trim();
 
-  const phone =
-    $("depPhone").value.trim();
+msg("depositMsg","","");
 
-  const tx =
-    $("depTx").value.trim();
+if(!amount||amount<=0)
+return msg("depositMsg","Enter a valid deposit amount.","err");
 
-  if(!amount || amount < 1){
-    return msg(
-      "depMsg",
-      "Enter a valid amount.",
-      "err"
-    );
-  }
+if(!/^07\d{8}$/.test(phone))
+return msg("depositMsg","Enter a valid phone number.","err");
 
-  if(!/^07\d{8}$/.test(phone)){
-    return msg(
-      "depMsg",
-      "Enter a valid 10-digit Ugandan phone number.",
-      "err"
-    );
-  }
+if(phone!==currentProfile.phone)
+return msg("depositMsg","Phone must match your registered phone.","err");
 
-  if(!tx){
-    return msg(
-      "depMsg",
-      "Enter the transaction ID.",
-      "err"
-    );
-  }
+if(!transaction)
+return msg("depositMsg","Enter the transaction ID.","err");
 
-  try{
+try{
 
-    await db.createRow(
-      DATABASE_ID,
-      T.deposits,
-      ID.unique(),
-      {
-        userId: user.$id,
-        username:
-          currentProfile.username || "",
-        phone: phone,
-        amount: amount,
-        recepient:
-          currentRecipient.number,
-        transactionId: tx,
-        status: "pending",
-        createdat:
-          new Date().toISOString()
-      }
-    );
+await db.createRow(
+DATABASE_ID,
+T.deposits,
+ID.unique(),
+{
+userId:user.$id,
+username:currentProfile.username,
+phone,
+amount,
+recepient:recipient,
+transactionId:transaction,
+status:"pending",
+createdAt:new Date().toISOString()
+}
+);
 
-    closeModal();
+msg(
+"depositMsg",
+"Deposit submitted successfully and is pending review.",
+"ok"
+);
 
-    showPageMessage(
-      "Deposit Submitted",
-      "Your deposit is pending approval."
-    );
+$("depositAmount").value="";
+$("depositTransaction").value="";
 
-  }catch(e){
+}catch(e){
 
-    msg(
-      "depMsg",
-      e.message || "Deposit submission failed.",
-      "err"
-    );
-  }
+msg(
+"depositMsg",
+e.message||"Could not submit deposit.",
+"err"
+);
+
 }
 
-function withdrawalWindowOpen(){
-
-  const now =
-    new Date();
-
-  const hour =
-    now.getHours();
-
-  return hour >= 8 && hour < 14;
 }
 
-function updateWithdrawalButton(){
-
-  const open =
-    withdrawalWindowOpen();
-
-  const button =
-    $("withdrawAction");
-
-  const status =
-    $("withdrawStatus");
-
-  if(button){
-    button.disabled = !open;
-  }
-
-  if(status){
-
-    status.textContent =
-      open
-        ? "Withdrawal window is open: 08:00–14:00."
-        : "Withdrawal window is closed. Withdrawals are available from 08:00 to 14:00.";
-  }
-}
 
 async function openWithdraw(){
 
-  if(!withdrawalWindowOpen()){
+if(!currentProfile)return showLogin();
 
-    return showPageMessage(
-      "Withdrawal Closed",
-      "Withdrawals are available from 08:00 to 14:00."
-    );
-  }
+$("withdrawPhone").value=
+currentProfile.phone||"";
 
-  await refreshProfile();
+$("withdrawAmount").value="";
 
-  const vip =
-    Number(currentProfile.viplevel || 0);
+msg("withdrawMsg","","");
 
-  const rule =
-    getVipRule(vip);
+showScreen("withdrawScreen");
 
-  openModal(`
+}
+  async function submitWithdrawal(){
 
-    <div class="modalhead">
-      <h3>Withdraw</h3>
+const phone=$("withdrawPhone").value.trim();
+const amount=Number($("withdrawAmount").value);
 
-      <button class="closebtn"
-              onclick="closeModal()">×</button>
-    </div>
+msg("withdrawMsg","","");
 
-    <div class="vipbox">
+if(!/^07\d{8}$/.test(phone))
+return msg("withdrawMsg","Enter a valid phone number.","err");
 
-      <div class="whiteSmall">
-        VIP ${vip}
-      </div>
+if(phone!==currentProfile.phone)
+return msg("withdrawMsg","Phone must match your registered phone.","err");
 
-      <h3>
-        ${rule.fee}% processing fee
-      </h3>
+if(!amount||amount<=0)
+return msg("withdrawMsg","Enter a valid amount.","err");
 
-      <div class="whiteSmall">
-        Estimated processing:
-        ${rule.processing} minutes
-      </div>
+if(amount<5000)
+return msg("withdrawMsg","Minimum withdrawal is UGX 5,000.","err");
 
-    </div>
+if(amount>5000000)
+return msg("withdrawMsg","Maximum withdrawal is UGX 5,000,000.","err");
 
-    <div class="row">
-      <span>Available balance</span>
-      <strong>
-        ${money(currentProfile.balance)}
-      </strong>
-    </div>
+if(Number(currentProfile.balance||0)<amount)
+return msg("withdrawMsg","Insufficient available balance.","err");
 
-    <div id="withMsg" class="msg"></div>
+const now=new Date();
 
-    <input
-      id="withAmount"
-      class="input"
-      type="number"
-      placeholder="Amount (5,000 – 5,000,000)">
+const localDate=new Intl.DateTimeFormat(
+"en-CA",
+{timeZone:"Africa/Kampala"}
+).format(now);
 
-    <input
-      id="withPhone"
-      class="input"
-      value="${currentProfile.phone || ""}"
-      placeholder="Registered phone"
-      inputmode="numeric">
+const parts=new Intl.DateTimeFormat(
+"en-GB",
+{
+timeZone:"Africa/Kampala",
+hour:"2-digit",
+hour12:false
+}
+).formatToParts(now);
 
-    <button
-      class="mainbtn"
-      onclick="submitWithdrawal()">
-      Submit Withdrawal
-    </button>
+const hour=Number(
+parts.find(x=>x.type==="hour")?.value||0
+);
 
-    <p class="notice">
-      Minimum withdrawal: UGX 5,000.
-      Maximum withdrawal: UGX 5,000,000.
-      One withdrawal per day.
-    </p>
+if(hour<8||hour>=14)
+return msg(
+"withdrawMsg",
+"Withdrawals are available from 8:00 AM to 2:00 PM.",
+"err"
+);
 
-  `);
+try{
+
+const existing=await db.listRows(
+DATABASE_ID,
+T.withdrawals,
+[
+Query.equal("userId",user.$id),
+Query.equal("date",localDate),
+Query.limit(1)
+]
+);
+
+if(existing.rows&&existing.rows.length)
+return msg(
+"withdrawMsg",
+"Only one withdrawal is allowed per day.",
+"err"
+);
+
+await db.createRow(
+DATABASE_ID,
+T.withdrawals,
+ID.unique(),
+{
+userId:user.$id,
+username:currentProfile.username,
+phone,
+amount,
+status:"pending",
+date:localDate,
+createdAt:now.toISOString()
+}
+);
+
+msg(
+"withdrawMsg",
+"Withdrawal submitted and is pending processing.",
+"ok"
+);
+
+$("withdrawAmount").value="";
+
+}catch(e){
+
+msg(
+"withdrawMsg",
+e.message||"Withdrawal submission failed.",
+"err"
+);
+
 }
 
-async function submitWithdrawal(){
-
-  if(!withdrawalWindowOpen()){
-
-    return msg(
-      "withMsg",
-      "Withdrawal window is closed.",
-      "err"
-    );
-  }
-
-  const amount =
-    Number($("withAmount").value);
-
-  const phone =
-    $("withPhone").value.trim();
-
-  if(amount < 5000){
-
-    return msg(
-      "withMsg",
-      "Minimum withdrawal is UGX 5,000.",
-      "err"
-    );
-  }
-
-  if(amount > 5000000){
-
-    return msg(
-      "withMsg",
-      "Maximum withdrawal is UGX 5,000,000.",
-      "err"
-    );
-  }
-
-  if(!/^07\d{8}$/.test(phone)){
-
-    return msg(
-      "withMsg",
-      "Use the registered 07XXXXXXXX phone number.",
-      "err"
-    );
-  }
-
-  if(phone !== currentProfile.phone){
-
-    return msg(
-      "withMsg",
-      "The payment phone must match your registered phone.",
-      "err"
-    );
-  }
-
-  if(
-    amount >
-    Number(currentProfile.balance || 0)
-  ){
-
-    return msg(
-      "withMsg",
-      "Insufficient balance.",
-      "err"
-    );
-  }
-
-  try{
-
-    const today =
-      new Date()
-        .toISOString()
-        .slice(0,10);
-
-    const existing =
-      await db.listRows(
-        DATABASE_ID,
-        T.withdrawals,
-        [
-          Query.equal(
-            "userId",
-            user.$id
-          ),
-          Query.limit(100)
-        ]
-      );
-
-    const todayAlready =
-      (existing.rows || []).some(x =>
-        String(x.createdat || "")
-          .slice(0,10) === today
-      );
-
-    if(todayAlready){
-
-      return msg(
-        "withMsg",
-        "You can only make one withdrawal per day.",
-        "err"
-      );
-    }
-
-    /*
-      Balance is NOT deducted here.
-      It remains pending until the admin
-      approves the withdrawal.
-    */
-
-    await db.createRow(
-      DATABASE_ID,
-      T.withdrawals,
-      ID.unique(),
-      {
-        userId: user.$id,
-        username:
-          currentProfile.username || "",
-        phone: currentProfile.phone || "",
-        amount: amount,
-        paymentphone: phone,
-        status: "pending",
-        createdat:
-          new Date().toISOString(),
-        processedat: "",
-        transactionId: "",
-        note: ""
-      }
-    );
-
-    closeModal();
-
-    showPageMessage(
-      "Withdrawal Submitted",
-      "Your withdrawal request is pending approval."
-    );
-
-  }catch(e){
-
-    msg(
-      "withMsg",
-      e.message || "Withdrawal failed.",
-      "err"
-    );
-  }
 }
 
-async function showProfile(){
 
-  if(!user){
-    return showLogin();
+async function openProducts(){
+
+showScreen("productsScreen");
+
+const box=$("productsList");
+
+box.innerHTML=
+'<div class="card">Loading products...</div>';
+
+try{
+
+const result=await db.listRows(
+DATABASE_ID,
+T.products,
+[Query.limit(100)]
+);
+
+if(!result.rows.length){
+
+box.innerHTML=
+'<div class="card">No products available.</div>';
+
+return;
+}
+
+box.innerHTML="";
+
+result.rows.forEach(p=>{
+
+const div=document.createElement("div");
+
+div.className="card";
+
+div.innerHTML=`
+<div class="title" style="font-size:19px">
+${escapeHTML(p.name||"Product")}
+</div>
+
+<div class="subtitle">
+Price: ${money(p.price)}
+</div>
+
+<div class="subtitle" style="margin-top:7px">
+${escapeHTML(p.description||"")}
+</div>
+
+<button class="mainbtn"
+onclick="buyProduct('${p.$id}')">
+Purchase
+</button>
+`;
+
+box.appendChild(div);
+
+});
+
+}catch(e){
+
+box.innerHTML=
+'<div class="card">Unable to load products.</div>';
+
+}
+
+}
+  async function buyProduct(productId){
+
+try{
+
+const product=await db.getRow(
+DATABASE_ID,
+T.products,
+productId
+);
+
+const price=Number(product.price||0);
+const wallet=Number(currentProfile.wallet||0);
+
+if(wallet<price)
+return alertBox("Insufficient wallet balance.");
+
+await db.createRow(
+DATABASE_ID,
+T.investments,
+ID.unique(),
+{
+userId:user.$id,
+productId:product.$id,
+productName:product.name||"",
+amount:price,
+status:"active",
+createdAt:new Date().toISOString()
+}
+);
+
+await db.updateRow(
+DATABASE_ID,
+T.users,
+currentProfile.$id,
+{
+wallet:wallet-price
+}
+);
+
+currentProfile.wallet=wallet-price;
+
+updateHomeNumbers();
+
+alertBox("Purchase submitted successfully.");
+
+}catch(e){
+
+alertBox(e.message||"Purchase failed.");
+
+}
+
+}
+
+
+async function openInvestments(){
+
+showScreen("investmentsScreen");
+
+const box=$("investmentsList");
+
+box.innerHTML=
+'<div class="card">Loading investments...</div>';
+
+try{
+
+const result=await db.listRows(
+DATABASE_ID,
+T.investments,
+[
+Query.equal("userId",user.$id),
+Query.limit(100)
+]
+);
+
+if(!result.rows.length){
+
+box.innerHTML=
+'<div class="card">No investments yet.</div>';
+
+return;
+}
+
+box.innerHTML="";
+
+result.rows.forEach(i=>{
+
+const div=document.createElement("div");
+
+div.className="card";
+
+div.innerHTML=`
+<div class="title" style="font-size:18px">
+${escapeHTML(i.productName||"Investment")}
+</div>
+
+<div class="subtitle">
+Amount: ${money(i.amount)}
+</div>
+
+<div class="subtitle" style="margin-top:7px">
+Status: ${escapeHTML(i.status||"—")}
+</div>
+
+<div class="subtitle" style="margin-top:7px">
+Started: ${escapeHTML(i.createdAt||"—")}
+</div>
+`;
+
+box.appendChild(div);
+
+});
+
+}catch(e){
+
+box.innerHTML=
+'<div class="card">Unable to load investments.</div>';
+
+}
+
+}
+
+
+async function openInvite(){
+
+showScreen("inviteScreen");
+
+const code=currentProfile.phone||user.$id;
+
+$("referralCode").textContent=code;
+
+try{
+
+const result=await db.listRows(
+DATABASE_ID,
+T.referrals,
+[
+Query.equal("referrerId",user.$id),
+Query.limit(100)
+]
+);
+
+$("referralStats").innerHTML=`
+<div class="card">
+<div class="subtitle">Total referrals</div>
+<div style="font-size:28px;font-weight:800;margin-top:5px">
+${result.rows.length}
+</div>
+
+<div class="subtitle" style="margin-top:12px">
+VIP Level: ${currentProfile.viplevel??0}
+</div>
+</div>
+`;
+
+}catch(e){
+
+$("referralStats").innerHTML=
+'<div class="card">Referral statistics unavailable.</div>';
+
+}
+
+}
+
+
+async function copyReferral(){
+
+const code=currentProfile.phone||user.$id;
+
+try{
+
+await navigator.clipboard.writeText(code);
+
+alertBox("Referral code copied.");
+
+}catch(e){
+
+alertBox("Copy failed.");
+
+}
+
   }
+  async function refreshAll(){
 
-  setNav("navProfile");
+try{
 
-  await refreshProfile();
+if(!user)return false;
 
-  const vip =
-    Number(currentProfile.viplevel || 0);
+const fresh=await getUserById(user.$id);
 
-  const rule =
-    getVipRule(vip);
+if(!fresh)return false;
 
-  openModal(`
+if(fresh.blocked===true){
 
-    <div class="modalhead">
-      <h3>My Account</h3>
+await logout();
 
-      <button class="closebtn"
-              onclick="closeModal()">×</button>
-    </div>
+return false;
 
-    <div class="profilecard">
-
-      <div class="row">
-        <span>Username</span>
-        <strong>
-          ${currentProfile.username || ""}
-        </strong>
-      </div>
-
-      <div class="row">
-        <span>Email</span>
-        <strong>
-          ${currentProfile.email || ""}
-        </strong>
-      </div>
-
-      <div class="row">
-        <span>Phone</span>
-        <strong>
-          ${currentProfile.phone || ""}
-        </strong>
-      </div>
-
-      <div class="row">
-        <span>Wallet</span>
-        <strong>
-          ${money(currentProfile.wallet)}
-        </strong>
-      </div>
-
-      <div class="row">
-        <span>Balance</span>
-        <strong>
-          ${money(currentProfile.balance)}
-        </strong>
-      </div>
-
-      <div class="row">
-        <span>VIP Level</span>
-        <strong>
-          VIP ${vip}
-        </strong>
-      </div>
-
-      <div class="row">
-        <span>Referral commission</span>
-        <strong>
-          ${rule.commission}%
-        </strong>
-      </div>
-
-      <div class="row">
-        <span>Total earned</span>
-        <strong>
-          ${money(currentProfile.totalearned)}
-        </strong>
-      </div>
-
-      <div class="row">
-        <span>Total deposited</span>
-        <strong>
-          ${money(currentProfile.totaldeposited)}
-        </strong>
-      </div>
-
-      <div class="row">
-        <span>Total withdrawn</span>
-        <strong>
-          ${money(currentProfile.totalwithdrawn)}
-        </strong>
-      </div>
-
-    </div>
-
-    <button
-      class="mainbtn"
-      onclick="showMyInvestments()">
-      My Investments
-    </button>
-
-    <button
-      class="secondarybtn"
-      onclick="openChat()">
-      Chat & Support
-    </button>
-
-    <button
-      class="secondarybtn"
-      onclick="logout()">
-      Logout
-    </button>
-
-  `);
 }
 
-async function showMyInvestments(){
+currentProfile=fresh;
 
-  if(!user){
-    return;
-  }
+updateHomeNumbers();
 
-  try{
+return true;
 
-    const r =
-      await db.listRows(
-        DATABASE_ID,
-        T.investments,
-        [
-          Query.equal(
-            "userId",
-            user.$id
-          ),
-          Query.orderDesc("createdat"),
-          Query.limit(100)
-        ]
-      );
+}catch(e){
 
-    const rows =
-      r.rows || [];
+return false;
 
-    openModal(`
-
-      <div class="modalhead">
-        <h3>My Investments</h3>
-
-        <button class="closebtn"
-                onclick="closeModal()">×</button>
-      </div>
-
-      ${
-        rows.length
-        ? rows.map(inv => `
-
-          <div class="investment">
-
-            <div class="producthead">
-              <strong>
-                ${inv.productName || "Investment"}
-              </strong>
-
-              <span class="badge ${
-                inv.status === "running"
-                  ? "running"
-                  : "completed"
-              }">
-                ${inv.status || ""}
-              </span>
-            </div>
-
-            <div class="row">
-              <span>Amount</span>
-              <strong>
-                ${money(inv.amount)}
-              </strong>
-            </div>
-
-            <div class="row">
-              <span>Profit credited</span>
-              <strong>
-                ${money(inv.credited)}
-              </strong>
-            </div>
-
-            <div class="row">
-              <span>End date</span>
-              <strong>
-                ${
-                  inv.endat
-                  ? new Date(inv.endat)
-                      .toLocaleDateString()
-                  : "-"
-                }
-              </strong>
-            </div>
-
-          </div>
-
-        `).join("")
-        : `
-          <div class="product">
-            <p>You have no investments yet.</p>
-          </div>
-        `
-      }
-
-    `);
-
-  }catch(e){
-
-    showPageMessage(
-      "Investments",
-      "Could not load your investments."
-    );
-  }
 }
 
-function openChat(){
-
-  openModal(`
-
-    <div class="modalhead">
-      <h3>Chat & Support</h3>
-
-      <button class="closebtn"
-              onclick="closeModal()">×</button>
-    </div>
-
-    <button
-      class="secondarybtn"
-      onclick="openTelegram()">
-      Telegram Group
-    </button>
-
-    <button
-      class="secondarybtn"
-      onclick="openAnnouncement()">
-      Vortex Announcement
-    </button>
-
-    <button
-      class="mainbtn"
-      onclick="chatAdmin()">
-      Chat With Admin
-    </button>
-
-  `);
 }
 
-function openTelegram(){
 
-  window.open(
-    "https://t.me/",
-    "_blank"
-  );
+async function sessionValid(){
+
+try{
+
+const sessionUser=await account.get();
+
+user=sessionUser;
+
+return true;
+
+}catch(e){
+
+user=null;
+
+return false;
+
 }
 
-function openAnnouncement(){
-
-  window.open(
-    "https://t.me/",
-    "_blank"
-  );
 }
 
-function chatAdmin(){
-
-  window.open(
-    "https://t.me/",
-    "_blank"
-  );
-  }
-  function startAutomaticProcessing(){
-
-  setInterval(async function(){
-
-    if(!user){
-      return;
-    }
-
-    if(!await sessionValid()){
-      return;
-    }
-
-    try{
-
-      const fresh =
-        await getUserById(user.$id);
-
-      if(
-        !fresh ||
-        fresh.blocked === true
-      ){
-
-        await logout();
-        return;
-      }
-
-      currentProfile =
-        fresh;
-
-      await processAllEarnings();
-
-      await refreshReferralStatus();
-
-      updateWithdrawalButton();
-
-    }catch(e){}
-
-  },60000);
-}
-
-function startWithdrawalClock(){
-
-  updateWithdrawalButton();
-
-  setInterval(
-    updateWithdrawalButton,
-    30000
-  );
-}
 
 async function initialize(){
 
-  try{
+try{
 
-    const active =
-      await sessionValid();
+const active=await sessionValid();
 
-    if(!active){
+if(!active){
 
-      showLogin();
-      return;
-    }
+showLogin();
 
-    user =
-      await account.get();
+return;
 
-    const profile =
-      await getUserById(user.$id);
-
-    if(
-      !profile ||
-      profile.blocked === true
-    ){
-
-      await logout();
-      return;
-    }
-
-    currentProfile =
-      profile;
-
-    showScreen("homeScreen");
-
-    await processAllEarnings();
-
-    await refreshReferralStatus();
-
-    await loadProducts();
-
-    updateHomeNumbers();
-
-    updateWithdrawalButton();
-
-  }catch(e){
-
-    showLogin();
-  }
 }
 
-startWithdrawalClock();
+const ok=await refreshAll();
 
-startAutomaticProcessing();
+if(!ok){
 
-initialize();
+await logout();
+
+return;
+
+}
+
+await showHome();
+
+}catch(e){
+
+user=null;
+currentProfile=null;
+
+showLogin();
+
+}
+
+}
+
+
+async function safeRefresh(){
+
+const ok=await refreshAll();
+
+if(!ok){
+
+showLogin();
+
+return false;
+
+}
+
+return true;
+
+}
+  document.addEventListener(
+"visibilitychange",
+async()=>{
+if(!document.hidden&&user){
+await safeRefresh();
+}
+}
+);
+
+window.addEventListener(
+"online",
+async()=>{
+if(user){
+await safeRefresh();
+}
+}
+);
+
+$("loginPassword").addEventListener(
+"keydown",
+e=>{
+if(e.key==="Enter")login();
+}
+);
+
+$("regConfirm").addEventListener(
+"keydown",
+e=>{
+if(e.key==="Enter")register();
+}
+);
+
+$("depositTransaction").addEventListener(
+"keydown",
+e=>{
+if(e.key==="Enter")submitDeposit();
+}
+);
+
+$("withdrawAmount").addEventListener(
+"keydown",
+e=>{
+if(e.key==="Enter")submitWithdrawal();
+}
+);
+
+function clearMessages(){
+
+[
+"loginMsg",
+"regMsg",
+"depositMsg",
+"withdrawMsg"
+].forEach(id=>{
+
+const el=$(id);
+
+if(el){
+el.textContent="";
+el.className="msg";
+}
+
+});
+
+}
+
+
+function resetForms(){
+
+[
+"loginEmail",
+"loginPassword",
+"regUsername",
+"regPhone",
+"regEmail",
+"regPassword",
+"regConfirm",
+"depositAmount",
+"depositTransaction",
+"withdrawAmount"
+].forEach(id=>{
+
+const el=$(id);
+
+if(el)el.value="";
+
+});
+
+}
+
+
+function goLogin(){
+
+clearMessages();
+resetForms();
+showLogin();
+
+}
+
+
+function goRegister(){
+
+clearMessages();
+resetForms();
+showScreen("registerScreen");
+
+}
+
+
+window.addEventListener(
+"beforeunload",
+()=>{
+}
+);
+  initialize();
+
 </script>
 
 </body>
 </html>
-  
