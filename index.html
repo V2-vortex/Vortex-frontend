@@ -303,22 +303,27 @@ async function register(){
 }
 
 async function login(){
-async function login(){
- let email=$("loginEmail").value.trim();
- let password=$("loginPassword").value;
+ const email=$("loginEmail").value.trim();
+ const password=$("loginPassword").value;
+
  if(!email||!password)
   return msg("loginMsg","Enter email and password.","err");
+
  try{
   await account.createEmailPasswordSession(email,password);
+  await new Promise(r=>setTimeout(r,300));
   user=await account.get();
   await refreshProfile();
+
   if(currentProfile.blocked){
    await account.deleteSession("current");
    user=null;
    return msg("loginMsg","This account is blocked.","err");
   }
+
   showHome();
  }catch(e){
+  console.error(e);
   msg("loginMsg",e.message||"Login failed.","err");
  }
 }
